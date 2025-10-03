@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from './components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
+import { Switch } from './components/ui/switch';
 import { toast } from 'sonner';
 import { Toaster } from './components/ui/sonner';
 import '@/App.css';
