@@ -1,0 +1,33 @@
+[Unit]
+Description=Filatag RFID Programmer Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/app/backend
+ExecStart=/usr/bin/python3 server.py
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Environment variables
+Environment=PYTHONPATH=/app/backend
+Environment=MONGO_URL=mongodb://localhost:27017
+Environment=DB_NAME=filatag_db
+Environment=CORS_ORIGINS=*
+
+# Security settings
+NoNewPrivileges=yes
+ProtectSystem=strict
+ReadWritePaths=/var/log/filatag /opt/filatag /etc/filatag
+
+# Resource limits
+LimitNOFILE=65536
+MemoryMax=512M
+
+[Install]
+WantedBy=multi-user.target
