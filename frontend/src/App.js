@@ -591,11 +591,11 @@ const Dashboard = () => {
         </div>
 
         <Tabs defaultValue="programming" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-4 h-12 bg-slate-100 rounded-lg shadow-sm">
+          <TabsList className="grid w-full grid-cols-4 mb-4 h-12 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-lg shadow-sm">
             <TabsTrigger 
               value="programming" 
               data-testid="programming-tab"
-              className="flex flex-col items-center gap-1 text-xs font-medium data-[state=active]:bg-blue-600 data-[state=active]:text-white min-h-[44px]"
+              className="flex flex-col items-center gap-1 text-xs font-medium data-[state=active]:bg-slate-800 data-[state=active]:text-white min-h-[44px] transition-all"
             >
               <span className="text-base">🚀</span>
               Program
@@ -603,7 +603,7 @@ const Dashboard = () => {
             <TabsTrigger 
               value="device" 
               data-testid="device-tab"
-              className="flex flex-col items-center gap-1 text-xs font-medium data-[state=active]:bg-blue-600 data-[state=active]:text-white min-h-[44px]"
+              className="flex flex-col items-center gap-1 text-xs font-medium data-[state=active]:bg-slate-800 data-[state=active]:text-white min-h-[44px] transition-all"
             >
               <span className="text-base">📡</span>
               Status
@@ -611,7 +611,7 @@ const Dashboard = () => {
             <TabsTrigger 
               value="logs" 
               data-testid="logs-tab"
-              className="flex flex-col items-center gap-1 text-xs font-medium data-[state=active]:bg-blue-600 data-[state=active]:text-white min-h-[44px]"
+              className="flex flex-col items-center gap-1 text-xs font-medium data-[state=active]:bg-slate-800 data-[state=active]:text-white min-h-[44px] transition-all"
             >
               <span className="text-base">📊</span>
               Logs
@@ -619,7 +619,7 @@ const Dashboard = () => {
             <TabsTrigger 
               value="config" 
               data-testid="config-tab"
-              className="flex flex-col items-center gap-1 text-xs font-medium data-[state=active]:bg-blue-600 data-[state=active]:text-white min-h-[44px]"
+              className="flex flex-col items-center gap-1 text-xs font-medium data-[state=active]:bg-slate-800 data-[state=active]:text-white min-h-[44px] transition-all"
             >
               <span className="text-base">⚙️</span>
               Settings
