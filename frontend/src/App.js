@@ -548,23 +548,9 @@ const Dashboard = () => {
             </Card>
           </TabsContent>
 
-          {/* Config Tab */}
+          {/* Settings Tab */}
           <TabsContent value="config">
-            <Card>
-              <CardHeader>
-                <CardTitle>Configuration Settings</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <Alert>
-                    <AlertDescription>
-                      Configuration settings will be implemented in the next phase.
-                      Current settings are loaded from /etc/filatag/config.json
-                    </AlertDescription>
-                  </Alert>
-                </div>
-              </CardContent>
-            </Card>
+            <SettingsPanel />
           </TabsContent>
         </Tabs>
       </div>
