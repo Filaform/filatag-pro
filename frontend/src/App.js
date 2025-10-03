@@ -567,56 +567,60 @@ const ProgrammingModal = ({ session, open, onClose }) => {
             <Progress value={getProgressValue()} className="h-2" />
           </div>
 
-          {/* Tag Programming Steps */}
+          {/* Auto-Detection Status */}
+          <div className="space-y-4">
+            <div className="text-center space-y-2">
+              <div className="text-lg font-medium">
+                Current Status: {autoStatus ? getAutoStateDisplay(autoStatus.state).text : 'Initializing...'}
+              </div>
+              <div className="text-sm text-gray-600">
+                Programming Tag #{currentStep} of 2
+              </div>
+            </div>
+          </div>
+
+          {/* Tag Programming Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Tag 1 */}
             <Card className="relative" data-testid="tag1-card">
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <span>Tag #1</span>
-                  <Badge className={`${getStatusColor(getTagStatus(1))} text-white`}>
-                    {getTagStatus(1)?.toUpperCase() || 'PENDING'}
+                  <Badge className={`${autoStatus && currentStep >= 1 ? getAutoStateDisplay(autoStatus.state).color : 'bg-gray-300'} text-white`}>
+                    {autoStatus && currentStep === 1 ? getAutoStateDisplay(autoStatus.state).text : 
+                     (currentStep > 1 ? 'COMPLETE' : 'WAITING')}
                   </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {getTagStatus(1) === 'pending' && (
-                  <div className="space-y-3">
-                    <Alert>
-                      <AlertDescription>
-                        Place the first RFID tag on the Proxmark3 antenna and click program.
-                      </AlertDescription>
-                    </Alert>
-                    <Button
-                      onClick={() => programTag(1)}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                      data-testid="program-tag1-btn"
-                    >
-                      Program Tag #1
-                    </Button>
-                  </div>
-                )}
-                
-                {(['writing', 'verifying'].includes(getTagStatus(1))) && (
-                  <div className="space-y-3">
-                    <Alert>
-                      <AlertDescription>
-                        {getTagStatus(1) === 'writing' ? 'Writing data to tag...' : 'Verifying written data...'}
-                      </AlertDescription>
-                    </Alert>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                      <span className="text-sm">Processing...</span>
-                    </div>
-                  </div>
+                {currentStep === 1 && autoStatus?.state === 'scanning' && (
+                  <Alert className="border-blue-200 bg-blue-50">
+                    <AlertDescription>
+                      📡 Waiting for Tag #1 to be placed on Proxmark3 antenna...
+                      <div className="mt-2 flex items-center space-x-2">
+                        <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-sm">Auto-detecting...</span>
+                      </div>
+                    </AlertDescription>
+                  </Alert>
                 )}
 
-                {(['pass', 'fail', 'error'].includes(getTagStatus(1))) && (
-                  <Alert className={getTagStatus(1) === 'pass' ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}>
+                {currentStep === 1 && ['programming', 'verifying'].includes(autoStatus?.state) && (
+                  <Alert className="border-purple-200 bg-purple-50">
                     <AlertDescription>
-                      {getTagStatus(1) === 'pass' && 'Tag #1 programmed successfully!'}
-                      {getTagStatus(1) === 'fail' && 'Tag #1 programming failed. Please retry.'}
-                      {getTagStatus(1) === 'error' && 'Error occurred during Tag #1 programming.'}
+                      ⚡ {autoStatus.state === 'programming' ? 'Programming Tag #1...' : 'Verifying Tag #1...'}
+                      <div className="mt-2 flex items-center space-x-2">
+                        <div className="w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-sm">Processing automatically...</span>
+                      </div>
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {currentStep > 1 && (
+                  <Alert className="border-green-200 bg-green-50">
+                    <AlertDescription>
+                      ✅ Tag #1 programmed and verified successfully!
                     </AlertDescription>
                   </Alert>
                 )}
@@ -628,53 +632,50 @@ const ProgrammingModal = ({ session, open, onClose }) => {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <span>Tag #2</span>
-                  <Badge className={`${getStatusColor(getTagStatus(2))} text-white`}>
-                    {getTagStatus(2)?.toUpperCase() || 'PENDING'}
+                  <Badge className={`${autoStatus && currentStep === 2 ? getAutoStateDisplay(autoStatus.state).color : 
+                    (autoStatus?.state === 'complete' ? 'bg-green-500' : 'bg-gray-300')} text-white`}>
+                    {autoStatus?.state === 'complete' ? 'COMPLETE' :
+                     (autoStatus && currentStep === 2 ? getAutoStateDisplay(autoStatus.state).text : 'WAITING')}
                   </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {getTagStatus(2) === 'pending' && (
-                  <div className="space-y-3">
-                    <Alert>
-                      <AlertDescription>
-                        {getTagStatus(1) === 'pass' 
-                          ? 'Remove Tag #1 and place the second RFID tag on the antenna.'
-                          : 'Complete Tag #1 programming first.'
-                        }
-                      </AlertDescription>
-                    </Alert>
-                    <Button
-                      onClick={() => programTag(2)}
-                      disabled={getTagStatus(1) !== 'pass'}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-300"
-                      data-testid="program-tag2-btn"
-                    >
-                      Program Tag #2
-                    </Button>
-                  </div>
-                )}
-                
-                {(['writing', 'verifying'].includes(getTagStatus(2))) && (
-                  <div className="space-y-3">
-                    <Alert>
-                      <AlertDescription>
-                        {getTagStatus(2) === 'writing' ? 'Writing data to tag...' : 'Verifying written data...'}
-                      </AlertDescription>
-                    </Alert>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                      <span className="text-sm">Processing...</span>
-                    </div>
-                  </div>
+                {currentStep < 2 && (
+                  <Alert>
+                    <AlertDescription>
+                      ⏳ Waiting for Tag #1 to complete...
+                    </AlertDescription>
+                  </Alert>
                 )}
 
-                {(['pass', 'fail', 'error'].includes(getTagStatus(2))) && (
-                  <Alert className={getTagStatus(2) === 'pass' ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}>
+                {currentStep === 2 && autoStatus?.state === 'scanning' && (
+                  <Alert className="border-blue-200 bg-blue-50">
                     <AlertDescription>
-                      {getTagStatus(2) === 'pass' && 'Tag #2 programmed successfully!'}
-                      {getTagStatus(2) === 'fail' && 'Tag #2 programming failed. Please retry.'}
-                      {getTagStatus(2) === 'error' && 'Error occurred during Tag #2 programming.'}
+                      📡 Remove Tag #1 and place Tag #2 on Proxmark3 antenna...
+                      <div className="mt-2 flex items-center space-x-2">
+                        <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-sm">Auto-detecting...</span>
+                      </div>
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {currentStep === 2 && ['programming', 'verifying'].includes(autoStatus?.state) && (
+                  <Alert className="border-purple-200 bg-purple-50">
+                    <AlertDescription>
+                      ⚡ {autoStatus.state === 'programming' ? 'Programming Tag #2...' : 'Verifying Tag #2...'}
+                      <div className="mt-2 flex items-center space-x-2">
+                        <div className="w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-sm">Processing automatically...</span>
+                      </div>
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {autoStatus?.state === 'complete' && (
+                  <Alert className="border-green-200 bg-green-50">
+                    <AlertDescription>
+                      ✅ Tag #2 programmed and verified successfully!
                     </AlertDescription>
                   </Alert>
                 )}
@@ -683,10 +684,19 @@ const ProgrammingModal = ({ session, open, onClose }) => {
           </div>
 
           {/* Session Complete */}
-          {getTagStatus(1) === 'pass' && getTagStatus(2) === 'pass' && (
+          {autoStatus?.state === 'complete' && (
             <Alert className="border-green-200 bg-green-50">
               <AlertDescription className="text-center font-medium text-green-800">
-                🎉 Both tags programmed successfully! Spool {sessionData.spool_id} is ready.
+                🎉 Both tags programmed successfully! Auto-programming complete.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {/* Error State */}
+          {autoStatus?.state === 'error' && (
+            <Alert className="border-red-200 bg-red-50">
+              <AlertDescription className="text-center font-medium text-red-800">
+                ❌ Error occurred during auto-programming. Please try again.
               </AlertDescription>
             </Alert>
           )}
