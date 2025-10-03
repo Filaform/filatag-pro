@@ -940,7 +940,7 @@ const Dashboard = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2 max-h-96 overflow-y-auto">
+                <div className="space-y-2 max-h-80 overflow-y-auto">
                   {logs.length > 0 ? (
                     logs.map((log, index) => (
                       <div key={index} className="border-l-4 border-blue-400 pl-4 py-2 bg-slate-50 rounded">
