@@ -112,17 +112,6 @@ const Dashboard = () => {
     filament.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'pass': return 'bg-green-500';
-      case 'fail': return 'bg-red-500';
-      case 'writing': return 'bg-blue-500 animate-pulse';
-      case 'verifying': return 'bg-yellow-500 animate-pulse';
-      case 'error': return 'bg-gray-500';
-      default: return 'bg-gray-300';
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="container mx-auto px-4 py-8">
