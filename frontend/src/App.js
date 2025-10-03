@@ -626,16 +626,16 @@ const Dashboard = () => {
 
           {/* Programming Tab */}
           <TabsContent value="programming">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Automated Workflow */}
-              <Card data-testid="auto-workflow-card">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <span className="text-2xl">🤖</span>
-                    Automated Programming
+            <div className="grid grid-cols-1 gap-4">
+              {/* Compact Automated Workflow */}
+              <Card data-testid="auto-workflow-card" className="shadow-lg">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <span className="text-xl">🤖</span>
+                    Auto Programming
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-4">
                   {/* Barcode Scanning Section */}
                   <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                     <div className="flex items-center gap-2 mb-3">
