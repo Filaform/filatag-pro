@@ -52,7 +52,20 @@ const Dashboard = () => {
     loadFilaments();
     checkDeviceStatus();
     loadLogs();
+    checkCameraStatus();
   }, []);
+
+  // Auto-detection polling
+  useEffect(() => {
+    let interval;
+    if (autoDetectionMode && currentSession) {
+      interval = setInterval(() => {
+        checkAutoSessionStatus();
+        scanBarcode();
+      }, 2000);
+    }
+    return () => clearInterval(interval);
+  }, [autoDetectionMode, currentSession]);
 
   const loadFilaments = async () => {
     try {
