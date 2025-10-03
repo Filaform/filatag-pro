@@ -87,6 +87,237 @@ const Dashboard = () => {
     setHasChanges(false);
   };
 
+  // Settings Panel Component
+  const SettingsPanel = () => {
+    return (
+      <div className="space-y-6">
+        {/* Device Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <span className="text-xl">🔧</span>
+              Device Settings
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Proxmark3 Settings */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">Proxmark3 Configuration</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="device-path">Device Path</Label>
+                  <Select 
+                    value={localSettings.device_path} 
+                    onValueChange={(value) => handleSettingChange('device_path', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="auto">🔍 Auto-detect</SelectItem>
+                      <SelectItem value="/dev/ttyACM0">/dev/ttyACM0</SelectItem>
+                      <SelectItem value="/dev/ttyACM1">/dev/ttyACM1</SelectItem>
+                      <SelectItem value="/dev/ttyUSB0">/dev/ttyUSB0</SelectItem>
+                      <SelectItem value="/dev/ttyUSB1">/dev/ttyUSB1</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="verification-mode">Verification Mode</Label>
+                  <Select 
+                    value={localSettings.verification_mode} 
+                    onValueChange={(value) => handleSettingChange('verification_mode', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="strict">🔒 Strict (Read-back verification)</SelectItem>
+                      <SelectItem value="tolerant">⚡ Tolerant (Skip verification)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="retry-count">Retry Count</Label>
+                  <Input
+                    id="retry-count"
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={localSettings.retry_count}
+                    onChange={(e) => handleSettingChange('retry_count', parseInt(e.target.value))}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="detection-interval">Detection Interval (seconds)</Label>
+                  <Input
+                    id="detection-interval"
+                    type="number"
+                    min="0.5"
+                    max="10"
+                    step="0.5"
+                    value={localSettings.detection_interval}
+                    onChange={(e) => handleSettingChange('detection_interval', parseFloat(e.target.value))}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Camera Settings */}
+            <div className="space-y-4 border-t pt-4">
+              <h3 className="text-lg font-medium">Camera Configuration</h3>
+              
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div>
+                  <h4 className="font-medium">Camera System</h4>
+                  <p className="text-sm text-gray-600">Enable USB webcam for barcode scanning</p>
+                </div>
+                <Switch 
+                  checked={localSettings.camera_enabled}
+                  onCheckedChange={(checked) => handleSettingChange('camera_enabled', checked)}
+                />
+              </div>
+
+              {localSettings.camera_enabled && (
+                <div>
+                  <Label htmlFor="barcode-scan-interval">Barcode Scan Interval (seconds)</Label>
+                  <Input
+                    id="barcode-scan-interval"
+                    type="number"
+                    min="0.5"
+                    max="10"
+                    step="0.5"
+                    value={localSettings.barcode_scan_interval}
+                    onChange={(e) => handleSettingChange('barcode_scan_interval', parseFloat(e.target.value))}
+                  />
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Automation Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <span className="text-xl">🤖</span>
+              Automation Settings
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div>
+                <h4 className="font-medium">Auto RFID Detection</h4>
+                <p className="text-sm text-gray-600">Automatically detect and program RFID tags when placed on antenna</p>
+              </div>
+              <Switch 
+                checked={localSettings.auto_rfid_detection}
+                onCheckedChange={(checked) => handleSettingChange('auto_rfid_detection', checked)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div>
+                <h4 className="font-medium">Mock Mode</h4>
+                <p className="text-sm text-gray-600">Simulate hardware operations for testing and development</p>
+              </div>
+              <Switch 
+                checked={localSettings.mock_mode}
+                onCheckedChange={(checked) => handleSettingChange('mock_mode', checked)}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Security Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <span className="text-xl">🔐</span>
+              Security Settings
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label>Default MIFARE Keys</Label>
+              <p className="text-sm text-gray-600 mb-2">Default keys used for MIFARE Classic authentication</p>
+              <div className="space-y-2">
+                {localSettings.default_keys.map((key, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <Input
+                      value={key}
+                      onChange={(e) => {
+                        const newKeys = [...localSettings.default_keys];
+                        newKeys[index] = e.target.value.toUpperCase();
+                        handleSettingChange('default_keys', newKeys);
+                      }}
+                      placeholder="Enter 12-character hex key"
+                      className="font-mono"
+                      maxLength={12}
+                    />
+                    {localSettings.default_keys.length > 1 && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const newKeys = localSettings.default_keys.filter((_, i) => i !== index);
+                          handleSettingChange('default_keys', newKeys);
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const newKeys = [...localSettings.default_keys, 'FFFFFFFFFFFF'];
+                    handleSettingChange('default_keys', newKeys);
+                  }}
+                >
+                  Add Key
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Save/Reset Buttons */}
+        <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-2">
+            {hasChanges && (
+              <Badge className="bg-yellow-100 text-yellow-800">Unsaved Changes</Badge>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={handleReset}
+              disabled={!hasChanges || settingsLoading}
+            >
+              Reset
+            </Button>
+            <Button
+              onClick={handleSave}
+              disabled={!hasChanges || settingsLoading}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              {settingsLoading ? 'Saving...' : 'Save Settings'}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-6">
       {/* Device Settings */}
