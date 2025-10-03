@@ -829,6 +829,13 @@ async def startup_event():
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
+    # Clean up camera system
+    if CAMERA_AVAILABLE:
+        try:
+            cleanup_camera_scanner()
+        except Exception as e:
+            logger.error(f"Error cleaning up camera: {e}")
+    
     client.close()
 
 if __name__ == "__main__":
