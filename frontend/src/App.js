@@ -559,61 +559,30 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="container mx-auto px-4 py-8">
-        {/* Enhanced Header Design */}
-        <div className="mb-10">
-          <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-2xl p-8 border border-slate-200/50 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-6">
-                <div className="relative">
-                  <img 
-                    src="/filaform-logo.png" 
-                    alt="Filaform" 
-                    className="h-16 w-auto drop-shadow-sm"
-                  />
-                </div>
-                <div className="border-l border-slate-300 pl-6">
-                  <div className="flex items-baseline gap-3 mb-2">
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-                      FilaTag
-                    </h1>
-                    <span className="text-lg font-medium text-emerald-600 tracking-wide">
-                      PRO
-                    </span>
-                  </div>
-                  <p className="text-slate-500 font-medium tracking-wide uppercase text-sm">
+        {/* Compact Touchscreen Header */}
+        <div className="mb-4">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-4 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <img 
+                  src="/filaform-logo.png" 
+                  alt="Filaform" 
+                  className="h-8 w-auto"
+                />
+                <div>
+                  <h1 className="text-xl font-bold text-white">
+                    FilaTag PRO
+                  </h1>
+                  <p className="text-blue-100 text-xs font-medium">
                     RFID Programming System
                   </p>
                 </div>
               </div>
               
-              {/* Status Indicator */}
-              <div className="flex flex-col items-end gap-2">
-                <div className="flex items-center gap-2 px-3 py-1 bg-white/70 rounded-full border">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs font-medium text-slate-600">System Ready</span>
-                </div>
-                <span className="text-xs text-slate-400">v2.0 Enterprise</span>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-8 text-sm">
+              {/* Compact Status */}
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">📡</span>
-                </div>
-                <span className="text-slate-600 font-medium">Proxmark3 Compatible</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">📷</span>
-                </div>
-                <span className="text-slate-600 font-medium">Barcode Scanning</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">🤖</span>
-                </div>
-                <span className="text-slate-600 font-medium">Auto Detection</span>
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-blue-100 text-xs font-medium">Ready</span>
               </div>
             </div>
           </div>
