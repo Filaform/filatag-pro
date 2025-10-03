@@ -647,15 +647,47 @@ async def update_config(new_config: dict):
 async def get_logs(limit: int = 100):
     """Get recent log entries"""
     logs = []
-    if LOG_FILE.exists():
-        with open(LOG_FILE) as f:
-            lines = f.readlines()
-            for line in lines[-limit:]:
-                try:
-                    logs.append(json.loads(line.strip()))
-                except:
-                    continue
-    return logs
+    try:
+        if LOG_FILE.exists():
+            with open(LOG_FILE, 'r') as f:
+                lines = f.readlines()
+                for line in lines[-limit:]:
+                    line = line.strip()
+                    if line:
+                        try:
+                            logs.append(json.loads(line))
+                        except json.JSONDecodeError:
+                            continue
+        return {"logs": logs, "total": len(logs)}
+    except Exception as e:
+        logger.error(f"Error reading logs: {e}")
+        return {"logs": [], "total": 0, "error": str(e)}
+
+@api_router.post("/logs/clear")
+async def clear_logs():
+    """Clear all log entries"""
+    try:
+        if LOG_FILE.exists():
+            # Backup current logs before clearing
+            backup_file = LOG_FILE.with_suffix('.backup')
+            with open(LOG_FILE, 'r') as src, open(backup_file, 'w') as dst:
+                dst.write(src.read())
+            
+            # Clear the log file
+            with open(LOG_FILE, 'w') as f:
+                f.write("")
+            
+            log_action("logs_cleared", "system", {
+                "cleared_by": "user_request",
+                "backup_created": str(backup_file)
+            })
+            
+            return {"message": "Logs cleared successfully", "backup": str(backup_file)}
+        else:
+            return {"message": "No log file found"}
+    except Exception as e:
+        logger.error(f"Error clearing logs: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to clear logs: {e}")
 
 # New Auto-Detection Endpoints
 @api_router.get("/camera/status")
