@@ -1,5 +1,5 @@
 from fastapi import FastAPI, APIRouter, HTTPException, BackgroundTasks
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, Response
 from starlette.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -17,6 +17,7 @@ from datetime import datetime, timezone
 from enum import Enum
 import uuid
 import signal
+import base64
 
 
 ROOT_DIR = Path(__file__).parent
