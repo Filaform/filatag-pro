@@ -117,30 +117,28 @@ def demo_cli_functionality(mock_mode: bool = True):
     else:
         print_error(f"Binary verification failed: {output}")
     
-    # Test 4: Programming simulation (interactive would be too complex for demo)
+    # Test 4: Auto-programming simulation
     if mock_mode:
-        print_step("Testing programming workflow (mock mode)")
-        # We'll use a simulated input approach
-        import tempfile
-        with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
-            f.write("y\ny\n")  # Simulate pressing 'y' for both tag placements
-            input_file = f.name
+        print_step("Testing auto-programming workflow (mock mode)")
+        cmd = [
+            "python3", "cli.py", "auto-program",
+            "--sku", "PLA001",
+            "--mock"
+        ]
         
-        try:
-            cmd = [
-                "python3", "cli.py", "program",
-                "--sku", "PLA001",
-                "--spool", f"DEMO{int(time.time())}",
-                "--operator", "DemoScript",
-                "--mock"
-            ]
-            
-            # For demo, we'll just show the command that would be run
-            print_info(f"Would run: {' '.join(cmd)}")
-            print_success("Programming command structure is correct")
+        print_info(f"Auto-programming command: {' '.join(cmd)}")
+        success, output = run_cli_command(cmd)
         
-        finally:
-            Path(input_file).unlink(missing_ok=True)
+        if success:
+            print_success("Auto-programming workflow completed successfully")
+            # Show key parts of output
+            lines = output.split('\n')
+            for line in lines:
+                if any(keyword in line.lower() for keyword in ['detected', 'programmed', 'complete', 'success']):
+                    print(f"   → {line}")
+        else:
+            print_error("Auto-programming failed")
+            print(output[-300:])  # Last 300 chars for debugging
 
 def demo_api_functionality():
     """Demo Web API functionality"""
