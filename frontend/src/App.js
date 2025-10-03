@@ -1108,8 +1108,8 @@ const ProgrammingModal = ({ session, open, onClose }) => {
             </div>
           </div>
 
-          {/* Tag Programming Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Touch-Optimized Tag Programming */}
+          <div className="grid grid-cols-2 gap-3">
             {/* Tag 1 */}
             <Card className="relative" data-testid="tag1-card">
               <CardHeader>
