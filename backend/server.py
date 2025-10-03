@@ -48,7 +48,7 @@ config = {
     "retries": 3,
     "verification_timeout": 30,
     "strict_verification": True,
-    "mock_mode": False,
+    "mock_mode": True,  # Enable mock mode for demonstration
     "default_keys": ["FFFFFFFFFFFF", "000000000000"]
 }
 
