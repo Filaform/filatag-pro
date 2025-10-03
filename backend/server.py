@@ -657,6 +657,146 @@ async def get_logs(limit: int = 100):
                     continue
     return logs
 
+# New Auto-Detection Endpoints
+@api_router.get("/camera/status")
+async def get_camera_status():
+    """Get camera system status"""
+    if not CAMERA_AVAILABLE:
+        return CameraStatus(available=False, initialized=False, scanning=False)
+    
+    scanner = get_scanner()
+    return CameraStatus(
+        available=True,
+        initialized=scanner is not None and scanner.cap is not None,
+        scanning=scanner is not None and scanner.scanning
+    )
+
+@api_router.post("/camera/initialize")
+async def initialize_camera(camera_index: int = 0):
+    """Initialize camera system"""
+    if not CAMERA_AVAILABLE:
+        raise HTTPException(status_code=400, detail="Camera system not available")
+    
+    success = initialize_camera_scanner(camera_index)
+    if success:
+        return {"message": "Camera initialized successfully", "camera_index": camera_index}
+    else:
+        raise HTTPException(status_code=500, detail="Failed to initialize camera")
+
+@api_router.get("/camera/frame")
+async def get_camera_frame():
+    """Get current camera frame as JPEG"""
+    if not CAMERA_AVAILABLE:
+        raise HTTPException(status_code=400, detail="Camera system not available")
+    
+    scanner = get_scanner()
+    if not scanner:
+        raise HTTPException(status_code=400, detail="Camera not initialized")
+    
+    frame = scanner.get_camera_frame()
+    if frame is None:
+        raise HTTPException(status_code=500, detail="Failed to capture frame")
+    
+    # Convert frame to JPEG
+    import cv2
+    _, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 70])
+    
+    return Response(content=buffer.tobytes(), media_type="image/jpeg")
+
+@api_router.get("/barcode/scan")
+async def scan_barcode():
+    """Scan for barcode in current camera view"""
+    if not CAMERA_AVAILABLE:
+        raise HTTPException(status_code=400, detail="Camera system not available")
+    
+    scanner = get_scanner()
+    if not scanner:
+        raise HTTPException(status_code=400, detail="Camera not initialized")
+    
+    # Try to get latest scan from continuous scanning
+    scan_result = scanner.get_latest_scan()
+    if scan_result:
+        mapper = get_barcode_mapper()
+        sku = mapper.get_sku_from_barcode(scan_result['data'])
+        
+        return {
+            "barcode": scan_result['data'],
+            "type": scan_result['type'],
+            "sku": sku,
+            "timestamp": scan_result['timestamp']
+        }
+    
+    # If no continuous scan available, try single scan
+    scan_result = scanner.scan_single_frame()
+    if scan_result:
+        mapper = get_barcode_mapper()
+        sku = mapper.get_sku_from_barcode(scan_result['data'])
+        
+        return {
+            "barcode": scan_result['data'],
+            "type": scan_result['type'], 
+            "sku": sku,
+            "timestamp": scan_result['timestamp']
+        }
+    
+    return {"barcode": None, "sku": None}
+
+@api_router.get("/barcode/mappings")
+async def get_barcode_mappings():
+    """Get all barcode to SKU mappings"""
+    if not CAMERA_AVAILABLE:
+        return {}
+    
+    mapper = get_barcode_mapper()
+    return mapper.get_all_mappings()
+
+@api_router.post("/barcode/mapping")
+async def add_barcode_mapping(mapping: BarcodeMapping):
+    """Add new barcode to SKU mapping"""
+    if not CAMERA_AVAILABLE:
+        raise HTTPException(status_code=400, detail="Camera system not available")
+    
+    mapper = get_barcode_mapper()
+    mapper.add_barcode_mapping(mapping.barcode, mapping.sku)
+    
+    return {"message": f"Added mapping: {mapping.barcode} -> {mapping.sku}"}
+
+@api_router.post("/auto-programming/start")
+async def start_auto_programming(request: AutoProgrammingRequest):
+    """Start automatic programming session with auto-detection"""
+    mapping = load_filament_mapping()
+    
+    if request.sku not in mapping:
+        raise HTTPException(status_code=404, detail=f"SKU {request.sku} not found")
+    
+    try:
+        session_id = await start_auto_programming_session(request.sku)
+        
+        return {
+            "session_id": session_id,
+            "sku": request.sku,
+            "message": "Auto-programming started. Place Tag #1 on Proxmark3 antenna.",
+            "mode": "auto_detection"
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to start auto-programming: {e}")
+
+@api_router.post("/auto-programming/stop")
+async def stop_auto_programming():
+    """Stop current auto-programming session"""
+    try:
+        stop_auto_programming_session()
+        return {"message": "Auto-programming stopped"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to stop auto-programming: {e}")
+
+@api_router.get("/auto-programming/status") 
+async def get_auto_programming_status():
+    """Get current auto-programming status"""
+    detector = get_auto_detector()
+    return detector.get_status()
+
 # Include router
 app.include_router(api_router)
 
