@@ -67,6 +67,7 @@ const Dashboard = () => {
     checkDeviceStatus();
     loadLogs();
     checkCameraStatus();
+    loadSettings();
   }, []);
 
   // Auto-detection polling
