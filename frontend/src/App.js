@@ -636,44 +636,22 @@ const Dashboard = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {/* Barcode Scanning Section */}
-                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <div className="flex items-center gap-2 mb-3">
+                  {/* Compact Barcode Scanning */}
+                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="flex items-center gap-2">
                       <span className="text-lg">📷</span>
-                      <span className="font-medium">Step 1: Scan Barcode</span>
-                      {cameraStatus?.available && (
-                        <Badge className={cameraStatus.initialized ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>
-                          {cameraStatus.initialized ? 'Camera Ready' : 'Camera Available'}
-                        </Badge>
-                      )}
-                    </div>
-                    
-                    {cameraStatus?.available ? (
-                      <div className="space-y-2">
+                      <div>
+                        <span className="font-medium text-sm">Barcode Scanner</span>
                         {barcodeScanResult ? (
-                          <Alert className="border-green-200 bg-green-50">
-                            <AlertDescription>
-                              ✅ Barcode detected: <strong>{barcodeScanResult.barcode}</strong>
-                              {barcodeScanResult.sku && (
-                                <span> → SKU: <strong>{barcodeScanResult.sku}</strong></span>
-                              )}
-                            </AlertDescription>
-                          </Alert>
+                          <p className="text-xs text-green-600">✅ {barcodeScanResult.sku}</p>
                         ) : (
-                          <Alert>
-                            <AlertDescription>
-                              📷 Point camera at filament spool barcode for automatic detection
-                            </AlertDescription>
-                          </Alert>
+                          <p className="text-xs text-gray-600">Ready to scan</p>
                         )}
                       </div>
-                    ) : (
-                      <Alert className="border-yellow-200 bg-yellow-50">
-                        <AlertDescription>
-                          📷 Camera not available - manual filament selection required
-                        </AlertDescription>
-                      </Alert>
-                    )}
+                    </div>
+                    <Badge className={cameraStatus?.initialized ? 'bg-green-500 text-white' : 'bg-gray-400 text-white'}>
+                      {cameraStatus?.initialized ? 'Ready' : 'Off'}
+                    </Badge>
                   </div>
 
                   {/* Filament Selection */}
