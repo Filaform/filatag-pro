@@ -813,6 +813,18 @@ async def startup_event():
     """Initialize application"""
     create_sample_binaries()
     load_filament_mapping()
+    
+    # Initialize camera system if available
+    if CAMERA_AVAILABLE:
+        try:
+            camera_initialized = initialize_camera_scanner()
+            if camera_initialized:
+                logger.info("Camera system initialized successfully")
+            else:
+                logger.warning("Camera system available but failed to initialize")
+        except Exception as e:
+            logger.warning(f"Failed to initialize camera system: {e}")
+    
     logger.info("Filatag RFID Programmer started")
 
 @app.on_event("shutdown")
