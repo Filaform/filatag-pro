@@ -177,6 +177,10 @@ def create_sample_binaries():
 
 async def detect_proxmark_device() -> Optional[str]:
     """Auto-detect Proxmark3 device path"""
+    # In mock mode, always return a mock device path
+    if config.get("mock_mode", False):
+        return "/dev/ttyACM0"
+    
     possible_paths = ["/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyUSB0", "/dev/ttyUSB1"]
     
     for path in possible_paths:
