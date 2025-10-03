@@ -551,9 +551,9 @@ const ProgrammingModal = ({ session, open, onClose }) => {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl" data-testid="programming-modal">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Programming RFID Tags</DialogTitle>
+          <DialogTitle className="text-2xl">🤖 Auto-Programming RFID Tags</DialogTitle>
           <p className="text-gray-600">
-            SKU: {sessionData.sku} | Spool: {sessionData.spool_id}
+            SKU: {session.sku} | Mode: Automated Detection
           </p>
         </DialogHeader>
         
