@@ -487,32 +487,30 @@ const Dashboard = () => {
   );
 };
 
-// Programming Modal Component
+// Auto-Programming Modal Component  
 const ProgrammingModal = ({ session, open, onClose }) => {
-  const [sessionData, setSessionData] = useState(session);
-  const [currentStep, setCurrentStep] = useState(1); // 1 or 2 for tag number
+  const [autoStatus, setAutoStatus] = useState(null);
+  const [currentStep, setCurrentStep] = useState(1);
 
   useEffect(() => {
-    if (session) {
-      setSessionData(session);
-      setCurrentStep(1);
-    }
-  }, [session]);
-
-  useEffect(() => {
-    if (!open || !sessionData) return;
+    if (!open || !session) return;
 
     const interval = setInterval(async () => {
       try {
-        const response = await axios.get(`${API}/programming/${sessionData.id}`);
-        setSessionData(response.data);
+        const response = await axios.get(`${API}/auto-programming/status`);
+        setAutoStatus(response.data);
+        
+        // Update current step based on auto-detection state
+        if (response.data.current_tag_number) {
+          setCurrentStep(response.data.current_tag_number);
+        }
       } catch (error) {
-        console.error('Error fetching session status:', error);
+        console.error('Error fetching auto-programming status:', error);
       }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [open, sessionData?.id]);
+  }, [open, session]);
 
   const programTag = async (tagNum) => {
     try {
