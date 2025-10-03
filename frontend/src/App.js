@@ -517,13 +517,23 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
+        {/* Header with Filaform Branding */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-800 mb-2">
-            Filatag RFID Programmer
-          </h1>
+          <div className="flex items-center gap-4 mb-4">
+            <img 
+              src="/filaform-logo.png" 
+              alt="Filaform Logo" 
+              className="h-12 w-auto"
+            />
+            <div>
+              <h1 className="text-4xl font-bold text-slate-800 mb-1">
+                FilaTag
+              </h1>
+              <p className="text-lg text-blue-600 font-medium">RFID Programmer</p>
+            </div>
+          </div>
           <p className="text-slate-600">
-            Program MIFARE Classic RFID tags for filament spools using Proxmark3
+            Professional MIFARE Classic RFID programming solution for filament spools
           </p>
         </div>
 
