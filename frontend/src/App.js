@@ -334,56 +334,51 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
 
-              {/* Device Status */}
+              {/* Simplified Device Status */}
               <Card data-testid="device-status-card">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <span className="text-2xl">🔧</span>
-                    Device Status
+                    <span className="text-2xl">📟</span>
+                    System Status
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  {deviceStatus ? (
-                    <>
-                      <div className="flex items-center gap-2">
-                        <Badge 
-                          className={deviceStatus.connected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
-                          data-testid="connection-status"
-                        >
-                          {deviceStatus.connected ? 'Connected' : 'Disconnected'}
-                        </Badge>
-                        {deviceStatus.mock_mode && (
-                          <Badge className="bg-yellow-100 text-yellow-800" data-testid="mock-mode-badge">
-                            Mock Mode
-                          </Badge>
-                        )}
-                      </div>
-                      
-                      {deviceStatus.device_path && (
-                        <p className="text-sm text-gray-600">
-                          <strong>Device Path:</strong> {deviceStatus.device_path}
-                        </p>
-                      )}
-                      
-                      <div className="bg-gray-50 p-3 rounded text-sm font-mono">
-                        <div className="max-h-32 overflow-y-auto">
-                          {deviceStatus.output}
-                        </div>
-                      </div>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Proxmark3</span>
+                    <Badge 
+                      className={deviceStatus?.connected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
+                      data-testid="proxmark-status"
+                    >
+                      {deviceStatus?.connected ? 'Ready' : 'Offline'}
+                    </Badge>
+                  </div>
 
-                      <Button
-                        onClick={checkDeviceStatus}
-                        variant="outline"
-                        className="w-full"
-                        data-testid="refresh-device-btn"
-                      >
-                        Refresh Status
-                      </Button>
-                    </>
-                  ) : (
-                    <div className="text-center py-4">
-                      <p className="text-gray-500">Loading device status...</p>
-                    </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Camera</span>
+                    <Badge 
+                      className={cameraStatus?.initialized ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}
+                      data-testid="camera-status"
+                    >
+                      {cameraStatus?.initialized ? 'Ready' : 'Not Available'}
+                    </Badge>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Mode</span>
+                    <Badge 
+                      className={deviceStatus?.mock_mode ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'}
+                      data-testid="mode-status"
+                    >
+                      {deviceStatus?.mock_mode ? 'Mock' : 'Live'}
+                    </Badge>
+                  </div>
+
+                  {(!deviceStatus?.connected || !cameraStatus?.initialized) && (
+                    <Alert className="mt-3">
+                      <AlertDescription className="text-xs">
+                        Check Device Status tab for detailed information
+                      </AlertDescription>
+                    </Alert>
                   )}
                 </CardContent>
               </Card>
