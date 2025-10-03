@@ -405,6 +405,11 @@ async def verify_tag(binary_path: Path, expected_hash: str, keys: List[str] = No
     if keys is None:
         keys = config["default_keys"]
     
+    # In mock mode, always return True for verification
+    if config.get("mock_mode", False):
+        await asyncio.sleep(1)  # Simulate verification time
+        return True
+    
     read_data = bytearray(1024)
     
     # Read all blocks
@@ -425,7 +430,7 @@ async def verify_tag(binary_path: Path, expected_hash: str, keys: List[str] = No
                     # Parse hex data from output
                     output_lines = result["output"].split('\n')
                     for line in output_lines:
-                        if "Block data:" in line or block_num in line:
+                        if "Block data:" in line or str(block_num) in line:
                             hex_part = line.split(':')[-1].strip()
                             hex_bytes = hex_part.replace(' ', '')
                             if len(hex_bytes) == 32:  # 16 bytes * 2 hex chars
