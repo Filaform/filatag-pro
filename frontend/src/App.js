@@ -730,69 +730,49 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
 
-              {/* System Status Overview */}
-              <Card data-testid="device-status-card" className="border-0 shadow-lg bg-gradient-to-br from-white to-slate-50">
-                <CardHeader className="pb-4">
-                  <CardTitle className="flex items-center gap-3 text-lg">
-                    <div className="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-700 rounded-xl flex items-center justify-center">
-                      <span className="text-white text-lg">⚡</span>
-                    </div>
-                    System Overview
+              {/* Compact System Status */}
+              <Card data-testid="device-status-card" className="shadow-lg">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <span className="text-lg">⚡</span>
+                    System Status
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  {/* Proxmark3 Status */}
-                  <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-100">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                        <span className="text-white text-sm">📡</span>
-                      </div>
-                      <span className="font-medium text-slate-700">Proxmark3</span>
+                <CardContent className="space-y-3">
+                  {/* Compact Status Grid */}
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="flex flex-col items-center p-2 bg-slate-50 rounded-lg">
+                      <span className="text-lg mb-1">📡</span>
+                      <span className="text-xs font-medium">Proxmark3</span>
+                      <Badge 
+                        className={`${deviceStatus?.connected ? 'bg-green-500' : 'bg-red-500'} text-white text-xs px-2 py-0 mt-1`}
+                        data-testid="proxmark-status"
+                      >
+                        {deviceStatus?.connected ? 'Ready' : 'Off'}
+                      </Badge>
                     </div>
-                    <Badge 
-                      className={`${deviceStatus?.connected 
-                        ? 'bg-green-500 hover:bg-green-600 text-white border-0' 
-                        : 'bg-red-500 hover:bg-red-600 text-white border-0'} font-medium`}
-                      data-testid="proxmark-status"
-                    >
-                      {deviceStatus?.connected ? '● Ready' : '● Offline'}
-                    </Badge>
-                  </div>
 
-                  {/* Camera Status */}
-                  <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-100">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
-                        <span className="text-white text-sm">📷</span>
-                      </div>
-                      <span className="font-medium text-slate-700">Camera</span>
+                    <div className="flex flex-col items-center p-2 bg-slate-50 rounded-lg">
+                      <span className="text-lg mb-1">📷</span>
+                      <span className="text-xs font-medium">Camera</span>
+                      <Badge 
+                        className={`${cameraStatus?.initialized ? 'bg-green-500' : 'bg-gray-500'} text-white text-xs px-2 py-0 mt-1`}
+                        data-testid="camera-status"
+                      >
+                        {cameraStatus?.initialized ? 'Ready' : 'Off'}
+                      </Badge>
                     </div>
-                    <Badge 
-                      className={`${cameraStatus?.initialized 
-                        ? 'bg-green-500 hover:bg-green-600 text-white border-0' 
-                        : 'bg-gray-500 hover:bg-gray-600 text-white border-0'} font-medium`}
-                      data-testid="camera-status"
-                    >
-                      {cameraStatus?.initialized ? '● Ready' : '○ Standby'}
-                    </Badge>
-                  </div>
 
-                  {/* Operation Mode */}
-                  <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-100">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
-                        <span className="text-white text-sm">⚙️</span>
-                      </div>
-                      <span className="font-medium text-slate-700">Mode</span>
+                    <div className="flex flex-col items-center p-2 bg-slate-50 rounded-lg">
+                      <span className="text-lg mb-1">⚙️</span>
+                      <span className="text-xs font-medium">Mode</span>
+                      <Badge 
+                        className={`${deviceStatus?.mock_mode ? 'bg-orange-500' : 'bg-blue-500'} text-white text-xs px-2 py-0 mt-1`}
+                        data-testid="mode-status"
+                      >
+                        {deviceStatus?.mock_mode ? 'Mock' : 'Live'}
+                      </Badge>
                     </div>
-                    <Badge 
-                      className={`${deviceStatus?.mock_mode 
-                        ? 'bg-orange-500 hover:bg-orange-600 text-white border-0' 
-                        : 'bg-blue-500 hover:bg-blue-600 text-white border-0'} font-medium`}
-                      data-testid="mode-status"
-                    >
-                      {deviceStatus?.mock_mode ? '🧪 Simulation' : '⚡ Hardware'}
-                    </Badge>
                   </div>
                 </CardContent>
               </Card>
