@@ -57,6 +57,7 @@ const Dashboard = () => {
     camera_enabled: true,
     auto_rfid_detection: true,
     device_path: 'auto',
+    camera_device_path: '/dev/video0',
     verification_mode: 'strict',
     mock_mode: false,
     retry_count: 3,
