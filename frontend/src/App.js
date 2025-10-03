@@ -559,24 +559,64 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="container mx-auto px-4 py-8">
-        {/* Header with Filaform Branding */}
-        <div className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            <img 
-              src="/filaform-logo.png" 
-              alt="Filaform Logo" 
-              className="h-12 w-auto"
-            />
-            <div>
-              <h1 className="text-4xl font-bold text-slate-800 mb-1">
-                FilaTag
-              </h1>
-              <p className="text-lg text-blue-600 font-medium">RFID Programmer</p>
+        {/* Enhanced Header Design */}
+        <div className="mb-10">
+          <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-2xl p-8 border border-slate-200/50 shadow-sm">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-6">
+                <div className="relative">
+                  <img 
+                    src="/filaform-logo.png" 
+                    alt="Filaform" 
+                    className="h-16 w-auto drop-shadow-sm"
+                  />
+                </div>
+                <div className="border-l border-slate-300 pl-6">
+                  <div className="flex items-baseline gap-3 mb-2">
+                    <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+                      FilaTag
+                    </h1>
+                    <span className="text-lg font-medium text-emerald-600 tracking-wide">
+                      PRO
+                    </span>
+                  </div>
+                  <p className="text-slate-500 font-medium tracking-wide uppercase text-sm">
+                    RFID Programming System
+                  </p>
+                </div>
+              </div>
+              
+              {/* Status Indicator */}
+              <div className="flex flex-col items-end gap-2">
+                <div className="flex items-center gap-2 px-3 py-1 bg-white/70 rounded-full border">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-xs font-medium text-slate-600">System Ready</span>
+                </div>
+                <span className="text-xs text-slate-400">v2.0 Enterprise</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-8 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">📡</span>
+                </div>
+                <span className="text-slate-600 font-medium">Proxmark3 Compatible</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">📷</span>
+                </div>
+                <span className="text-slate-600 font-medium">Barcode Scanning</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">🤖</span>
+                </div>
+                <span className="text-slate-600 font-medium">Auto Detection</span>
+              </div>
             </div>
           </div>
-          <p className="text-slate-600">
-            Professional MIFARE Classic RFID programming solution for filament spools
-          </p>
         </div>
 
         <Tabs defaultValue="programming" className="w-full">
