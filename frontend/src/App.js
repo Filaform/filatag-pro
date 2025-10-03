@@ -214,75 +214,123 @@ const Dashboard = () => {
           {/* Programming Tab */}
           <TabsContent value="programming">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Filament Selection */}
-              <Card data-testid="filament-selection-card">
+              {/* Automated Workflow */}
+              <Card data-testid="auto-workflow-card">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <span className="text-2xl">📦</span>
-                    Filament Selection
+                    <span className="text-2xl">🤖</span>
+                    Automated Programming
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="search">Search Filaments</Label>
-                    <Input
-                      id="search"
-                      placeholder="Search by SKU, name, or description..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      data-testid="filament-search-input"
-                    />
+                <CardContent className="space-y-6">
+                  {/* Barcode Scanning Section */}
+                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-lg">📷</span>
+                      <span className="font-medium">Step 1: Scan Barcode</span>
+                      {cameraStatus?.available && (
+                        <Badge className={cameraStatus.initialized ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>
+                          {cameraStatus.initialized ? 'Camera Ready' : 'Camera Available'}
+                        </Badge>
+                      )}
+                    </div>
+                    
+                    {cameraStatus?.available ? (
+                      <div className="space-y-2">
+                        {barcodeScanResult ? (
+                          <Alert className="border-green-200 bg-green-50">
+                            <AlertDescription>
+                              ✅ Barcode detected: <strong>{barcodeScanResult.barcode}</strong>
+                              {barcodeScanResult.sku && (
+                                <span> → SKU: <strong>{barcodeScanResult.sku}</strong></span>
+                              )}
+                            </AlertDescription>
+                          </Alert>
+                        ) : (
+                          <Alert>
+                            <AlertDescription>
+                              📷 Point camera at filament spool barcode for automatic detection
+                            </AlertDescription>
+                          </Alert>
+                        )}
+                      </div>
+                    ) : (
+                      <Alert className="border-yellow-200 bg-yellow-50">
+                        <AlertDescription>
+                          📷 Camera not available - manual filament selection required
+                        </AlertDescription>
+                      </Alert>
+                    )}
                   </div>
 
-                  <div>
-                    <Label htmlFor="filament">Select Filament</Label>
-                    <Select value={selectedFilament} onValueChange={setSelectedFilament}>
-                      <SelectTrigger data-testid="filament-select">
-                        <SelectValue placeholder="Choose filament..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {filteredFilaments.map((filament) => (
-                          <SelectItem key={filament.sku} value={filament.sku}>
-                            <div className="flex flex-col">
-                              <span className="font-medium">{filament.sku} - {filament.name}</span>
-                              <span className="text-sm text-gray-500">{filament.description}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  {/* Filament Selection */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-lg">🏷️</span>
+                      <span className="font-medium">Step 2: Confirm Filament Type</span>
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="search">Search Filaments</Label>
+                      <Input
+                        id="search"
+                        placeholder="Search by SKU, name, or description..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        data-testid="filament-search-input"
+                      />
+                    </div>
+
+                    <div>
+                      <Select value={selectedFilament} onValueChange={setSelectedFilament}>
+                        <SelectTrigger data-testid="filament-select">
+                          <SelectValue placeholder="Choose filament..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {filteredFilaments.map((filament) => (
+                            <SelectItem key={filament.sku} value={filament.sku}>
+                              <div className="flex flex-col">
+                                <span className="font-medium">{filament.sku} - {filament.name}</span>
+                                <span className="text-sm text-gray-500">{filament.description}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
 
-                  <div>
-                    <Label htmlFor="spool">Spool ID</Label>
-                    <Input
-                      id="spool"
-                      placeholder="Enter spool identifier..."
-                      value={spoolId}
-                      onChange={(e) => setSpoolId(e.target.value)}
-                      data-testid="spool-id-input"
-                    />
-                  </div>
+                  {/* Programming Controls */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-lg">⚡</span>
+                      <span className="font-medium">Step 3: Start Auto-Programming</span>
+                    </div>
+                    
+                    <Alert className="border-blue-200 bg-blue-50">
+                      <AlertDescription>
+                        <div className="space-y-1">
+                          <div>✨ Automated workflow will:</div>
+                          <div className="ml-4 text-sm space-y-1">
+                            <div>• Detect when Tag #1 is placed on antenna</div>
+                            <div>• Automatically program and verify Tag #1</div>
+                            <div>• Prompt for Tag #2 placement</div>
+                            <div>• Automatically program and verify Tag #2</div>
+                            <div>• Complete when both tags are done</div>
+                          </div>
+                        </div>
+                      </AlertDescription>
+                    </Alert>
 
-                  <div>
-                    <Label htmlFor="operator">Operator (Optional)</Label>
-                    <Input
-                      id="operator"
-                      placeholder="Enter operator name..."
-                      value={operator}
-                      onChange={(e) => setOperator(e.target.value)}
-                      data-testid="operator-input"
-                    />
+                    <Button
+                      onClick={startProgramming}
+                      disabled={loading || !selectedFilament}
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
+                      data-testid="start-auto-programming-btn"
+                    >
+                      {loading ? 'Starting Auto-Programming...' : '🚀 Start Auto-Programming'}
+                    </Button>
                   </div>
-
-                  <Button
-                    onClick={startProgramming}
-                    disabled={loading || !selectedFilament || !spoolId}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
-                    data-testid="start-programming-btn"
-                  >
-                    {loading ? 'Starting...' : 'Start Programming'}
-                  </Button>
                 </CardContent>
               </Card>
 
