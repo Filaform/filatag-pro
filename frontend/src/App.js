@@ -1071,7 +1071,7 @@ const ProgrammingModal = ({ session, open, onClose }) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl" data-testid="programming-modal">
+      <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto" data-testid="programming-modal">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Auto-Programming Session
