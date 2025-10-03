@@ -31,8 +31,39 @@ const getStatusColor = (status) => {
   }
 };
 
-// Settings Panel Component
-const SettingsPanel = () => {
+// Main Dashboard Component
+const Dashboard = () => {
+  const [filaments, setFilaments] = useState([]);
+  const [deviceStatus, setDeviceStatus] = useState(null);
+  const [selectedFilament, setSelectedFilament] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [currentSession, setCurrentSession] = useState(null);
+  const [showProgramming, setShowProgramming] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [logs, setLogs] = useState([]);
+  
+  // Auto-detection states
+  const [cameraStatus, setCameraStatus] = useState(null);
+  const [autoDetectionMode, setAutoDetectionMode] = useState(true);
+  const [barcodeScanResult, setBarcodeScanResult] = useState(null);
+  const [autoSessionStatus, setAutoSessionStatus] = useState(null);
+  const [cameraFrame, setCameraFrame] = useState(null);
+  
+  // Settings states
+  const [settings, setSettings] = useState({
+    camera_enabled: true,
+    auto_rfid_detection: true,
+    device_path: 'auto',
+    verification_mode: 'strict',
+    mock_mode: false,
+    retry_count: 3,
+    detection_interval: 1.0,
+    barcode_scan_interval: 2.0,
+    default_keys: ['FFFFFFFFFFFF', '000000000000']
+  });
+  const [settingsLoading, setSettingsLoading] = useState(false);
+  
+  // Settings panel states
   const [localSettings, setLocalSettings] = useState(settings);
   const [hasChanges, setHasChanges] = useState(false);
 
