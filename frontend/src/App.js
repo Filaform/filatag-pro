@@ -898,7 +898,28 @@ const Dashboard = () => {
           <TabsContent value="logs">
             <Card>
               <CardHeader>
-                <CardTitle>Recent Activity Logs</CardTitle>
+                <div className="flex justify-between items-center">
+                  <CardTitle>Recent Activity Logs</CardTitle>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={loadLogs}
+                      variant="outline"
+                      size="sm"
+                      data-testid="refresh-logs-btn"
+                    >
+                      🔄 Refresh
+                    </Button>
+                    <Button
+                      onClick={clearLogs}
+                      variant="outline" 
+                      size="sm"
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      data-testid="clear-logs-btn"
+                    >
+                      🗑️ Clear Logs
+                    </Button>
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2 max-h-96 overflow-y-auto">
@@ -906,20 +927,47 @@ const Dashboard = () => {
                     logs.map((log, index) => (
                       <div key={index} className="border-l-4 border-blue-400 pl-4 py-2 bg-slate-50 rounded">
                         <div className="flex justify-between items-start">
-                          <span className="font-medium">{log.action}</span>
+                          <span className="font-medium capitalize">{log.action.replace(/_/g, ' ')}</span>
                           <span className="text-sm text-gray-500">
                             {new Date(log.timestamp).toLocaleString()}
                           </span>
                         </div>
-                        {log.sku && <p className="text-sm">SKU: {log.sku}</p>}
-                        {log.spool_id && <p className="text-sm">Spool: {log.spool_id}</p>}
-                        {log.error && <p className="text-sm text-red-600">Error: {log.error}</p>}
+                        <div className="text-sm text-gray-600 mt-1">
+                          {log.session_id && <span className="mr-4">Session: {log.session_id.slice(-8)}</span>}
+                          {log.sku && <span className="mr-4">SKU: {log.sku}</span>}
+                          {log.spool_id && <span className="mr-4">Spool: {log.spool_id}</span>}
+                          {log.tag_number && <span className="mr-4">Tag: #{log.tag_number}</span>}
+                        </div>
+                        {log.error && (
+                          <p className="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded">
+                            Error: {log.error}
+                          </p>
+                        )}
+                        {log.hash && (
+                          <p className="text-xs text-gray-400 font-mono mt-1">
+                            Hash: {log.hash.slice(0, 16)}...
+                          </p>
+                        )}
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-500 text-center py-4">No logs available</p>
+                    <div className="text-center py-8">
+                      <p className="text-gray-500 mb-2">No logs available</p>
+                      <Button
+                        onClick={loadLogs}
+                        variant="outline"
+                        size="sm"
+                      >
+                        🔄 Refresh Logs
+                      </Button>
+                    </div>
                   )}
                 </div>
+                {logs.length > 0 && (
+                  <div className="mt-4 text-sm text-gray-500 text-center">
+                    Showing {logs.length} most recent entries
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
