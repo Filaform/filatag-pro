@@ -589,37 +589,37 @@ const Dashboard = () => {
         </div>
 
         <Tabs defaultValue="programming" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8 h-14 bg-white/50 backdrop-blur-sm border border-slate-200 rounded-xl shadow-sm">
+          <TabsList className="grid w-full grid-cols-4 mb-4 h-12 bg-slate-100 rounded-lg shadow-sm">
             <TabsTrigger 
               value="programming" 
               data-testid="programming-tab"
-              className="flex items-center gap-2 font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              className="flex flex-col items-center gap-1 text-xs font-medium data-[state=active]:bg-blue-600 data-[state=active]:text-white min-h-[44px]"
             >
-              <span className="text-lg">🚀</span>
-              Programming
+              <span className="text-base">🚀</span>
+              Program
             </TabsTrigger>
             <TabsTrigger 
               value="device" 
               data-testid="device-tab"
-              className="flex items-center gap-2 font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              className="flex flex-col items-center gap-1 text-xs font-medium data-[state=active]:bg-blue-600 data-[state=active]:text-white min-h-[44px]"
             >
-              <span className="text-lg">📡</span>
-              Devices
+              <span className="text-base">📡</span>
+              Status
             </TabsTrigger>
             <TabsTrigger 
               value="logs" 
               data-testid="logs-tab"
-              className="flex items-center gap-2 font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              className="flex flex-col items-center gap-1 text-xs font-medium data-[state=active]:bg-blue-600 data-[state=active]:text-white min-h-[44px]"
             >
-              <span className="text-lg">📊</span>
-              Activity
+              <span className="text-base">📊</span>
+              Logs
             </TabsTrigger>
             <TabsTrigger 
               value="config" 
               data-testid="config-tab"
-              className="flex items-center gap-2 font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              className="flex flex-col items-center gap-1 text-xs font-medium data-[state=active]:bg-blue-600 data-[state=active]:text-white min-h-[44px]"
             >
-              <span className="text-lg">⚙️</span>
+              <span className="text-base">⚙️</span>
               Settings
             </TabsTrigger>
           </TabsList>
