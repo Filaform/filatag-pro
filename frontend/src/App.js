@@ -922,7 +922,7 @@ const Dashboard = () => {
                     <Button
                       onClick={loadLogs}
                       variant="outline"
-                      size="sm"
+                      className="min-h-[44px] px-4"
                       data-testid="refresh-logs-btn"
                     >
                       🔄 Refresh
@@ -930,11 +930,10 @@ const Dashboard = () => {
                     <Button
                       onClick={clearLogs}
                       variant="outline" 
-                      size="sm"
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50 min-h-[44px] px-4"
                       data-testid="clear-logs-btn"
                     >
-                      🗑️ Clear Logs
+                      🗑️ Clear
                     </Button>
                   </div>
                 </div>
