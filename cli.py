@@ -456,7 +456,11 @@ def main():
     try:
         if args.command == 'program':
             result = asyncio.run(program_spool(
-                args.sku, args.spool, args.operator, args.mock
+                args.sku, args.spool, args.operator, args.mock, not args.manual
+            ))
+        elif args.command == 'auto-program':
+            result = asyncio.run(program_spool(
+                args.sku, None, None, args.mock, True
             ))
         elif args.command == 'list-filaments':
             result = asyncio.run(list_filaments())
