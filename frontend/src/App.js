@@ -620,11 +620,39 @@ const Dashboard = () => {
         </div>
 
         <Tabs defaultValue="programming" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="programming" data-testid="programming-tab">Programming</TabsTrigger>
-            <TabsTrigger value="device" data-testid="device-tab">Device Status</TabsTrigger>
-            <TabsTrigger value="logs" data-testid="logs-tab">Logs</TabsTrigger>
-            <TabsTrigger value="config" data-testid="config-tab">Settings</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4 mb-8 h-14 bg-white/50 backdrop-blur-sm border border-slate-200 rounded-xl shadow-sm">
+            <TabsTrigger 
+              value="programming" 
+              data-testid="programming-tab"
+              className="flex items-center gap-2 font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
+            >
+              <span className="text-lg">🚀</span>
+              Programming
+            </TabsTrigger>
+            <TabsTrigger 
+              value="device" 
+              data-testid="device-tab"
+              className="flex items-center gap-2 font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
+            >
+              <span className="text-lg">📡</span>
+              Devices
+            </TabsTrigger>
+            <TabsTrigger 
+              value="logs" 
+              data-testid="logs-tab"
+              className="flex items-center gap-2 font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
+            >
+              <span className="text-lg">📊</span>
+              Activity
+            </TabsTrigger>
+            <TabsTrigger 
+              value="config" 
+              data-testid="config-tab"
+              className="flex items-center gap-2 font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
+            >
+              <span className="text-lg">⚙️</span>
+              Settings
+            </TabsTrigger>
           </TabsList>
 
           {/* Programming Tab */}
