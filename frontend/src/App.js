@@ -701,14 +701,22 @@ const ProgrammingModal = ({ session, open, onClose }) => {
             </Alert>
           )}
 
-          {/* Close Button */}
-          <div className="flex justify-end space-x-2">
+          {/* Control Buttons */}
+          <div className="flex justify-between space-x-2">
+            <Button 
+              variant="outline" 
+              onClick={stopAutoProgram}
+              className="bg-red-50 text-red-600 hover:bg-red-100"
+              data-testid="stop-programming-btn"
+            >
+              Stop Auto-Programming
+            </Button>
             <Button 
               variant="outline" 
               onClick={onClose}
               data-testid="close-programming-btn"
             >
-              Close
+              {autoStatus?.state === 'complete' ? 'Close' : 'Minimize'}
             </Button>
           </div>
         </div>
