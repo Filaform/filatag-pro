@@ -47,6 +47,20 @@ const Dashboard = () => {
   const [barcodeScanResult, setBarcodeScanResult] = useState(null);
   const [autoSessionStatus, setAutoSessionStatus] = useState(null);
   const [cameraFrame, setCameraFrame] = useState(null);
+  
+  // Settings states
+  const [settings, setSettings] = useState({
+    camera_enabled: true,
+    auto_rfid_detection: true,
+    device_path: 'auto',
+    verification_mode: 'strict',
+    mock_mode: false,
+    retry_count: 3,
+    detection_interval: 1.0,
+    barcode_scan_interval: 2.0,
+    default_keys: ['FFFFFFFFFFFF', '000000000000']
+  });
+  const [settingsLoading, setSettingsLoading] = useState(false);
 
   useEffect(() => {
     loadFilaments();
