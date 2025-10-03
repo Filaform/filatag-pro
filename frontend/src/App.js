@@ -18,6 +18,18 @@ import '@/App.css';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+// Utility function for status colors
+const getStatusColor = (status) => {
+  switch (status) {
+    case 'pass': return 'bg-green-500';
+    case 'fail': return 'bg-red-500';
+    case 'writing': return 'bg-blue-500 animate-pulse';
+    case 'verifying': return 'bg-yellow-500 animate-pulse';
+    case 'error': return 'bg-gray-500';
+    default: return 'bg-gray-300';
+  }
+};
+
 // Main Dashboard Component
 const Dashboard = () => {
   const [filaments, setFilaments] = useState([]);
