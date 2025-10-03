@@ -402,17 +402,38 @@ const Dashboard = () => {
               </div>
 
               {localSettings.camera_enabled && (
-                <div>
-                  <Label htmlFor="barcode-scan-interval">Barcode Scan Interval (seconds)</Label>
-                  <Input
-                    id="barcode-scan-interval"
-                    type="number"
-                    min="0.5"
-                    max="10"
-                    step="0.5"
-                    value={localSettings.barcode_scan_interval}
-                    onChange={(e) => handleSettingChange('barcode_scan_interval', parseFloat(e.target.value))}
-                  />
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="camera-device-path">Camera Device Path</Label>
+                    <Select 
+                      value={localSettings.camera_device_path} 
+                      onValueChange={(value) => handleSettingChange('camera_device_path', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="/dev/video0">/dev/video0 (USB Camera 1)</SelectItem>
+                        <SelectItem value="/dev/video1">/dev/video1 (USB Camera 2)</SelectItem>
+                        <SelectItem value="/dev/video2">/dev/video2 (USB Camera 3)</SelectItem>
+                        <SelectItem value="0">Camera Index 0</SelectItem>
+                        <SelectItem value="1">Camera Index 1</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="barcode-scan-interval">Barcode Scan Interval (seconds)</Label>
+                    <Input
+                      id="barcode-scan-interval"
+                      type="number"
+                      min="0.5"
+                      max="10"
+                      step="0.5"
+                      value={localSettings.barcode_scan_interval}
+                      onChange={(e) => handleSettingChange('barcode_scan_interval', parseFloat(e.target.value))}
+                    />
+                  </div>
                 </div>
               )}
             </div>
