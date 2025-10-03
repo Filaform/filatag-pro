@@ -149,6 +149,56 @@ const Dashboard = () => {
     }
   };
 
+  const loadSettings = async () => {
+    try {
+      const response = await axios.get(`${API}/config`);
+      setSettings({
+        camera_enabled: response.data.camera_enabled ?? true,
+        auto_rfid_detection: response.data.auto_rfid_detection ?? true,
+        device_path: response.data.device_path || 'auto',
+        verification_mode: response.data.strict_verification ? 'strict' : 'tolerant',
+        mock_mode: response.data.mock_mode ?? false,
+        retry_count: response.data.retries ?? 3,
+        detection_interval: response.data.detection_interval ?? 1.0,
+        barcode_scan_interval: response.data.barcode_scan_interval ?? 2.0,
+        default_keys: response.data.default_keys || ['FFFFFFFFFFFF', '000000000000']
+      });
+    } catch (error) {
+      console.error('Error loading settings:', error);
+      toast.error('Failed to load settings');
+    }
+  };
+
+  const saveSettings = async (newSettings) => {
+    setSettingsLoading(true);
+    try {
+      const configData = {
+        camera_enabled: newSettings.camera_enabled,
+        auto_rfid_detection: newSettings.auto_rfid_detection,
+        device_path: newSettings.device_path === 'auto' ? '/dev/ttyACM0' : newSettings.device_path,
+        strict_verification: newSettings.verification_mode === 'strict',
+        mock_mode: newSettings.mock_mode,
+        retries: newSettings.retry_count,
+        detection_interval: newSettings.detection_interval,
+        barcode_scan_interval: newSettings.barcode_scan_interval,
+        default_keys: newSettings.default_keys
+      };
+
+      await axios.post(`${API}/config`, configData);
+      setSettings(newSettings);
+      toast.success('Settings saved successfully');
+      
+      // Refresh device status after settings change
+      checkDeviceStatus();
+      checkCameraStatus();
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      toast.error('Failed to save settings');
+    } finally {
+      setSettingsLoading(false);
+    }
+  };
+
   const startProgramming = async () => {
     if (!selectedFilament) {
       toast.error('Please select a filament type');
