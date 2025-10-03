@@ -113,9 +113,27 @@ const Dashboard = () => {
   const loadLogs = async () => {
     try {
       const response = await axios.get(`${API}/logs?limit=50`);
-      setLogs(response.data);
+      if (response.data && response.data.logs) {
+        setLogs(response.data.logs);
+      } else if (Array.isArray(response.data)) {
+        setLogs(response.data);
+      } else {
+        setLogs([]);
+      }
     } catch (error) {
       console.error('Error loading logs:', error);
+      setLogs([]);
+    }
+  };
+
+  const clearLogs = async () => {
+    try {
+      await axios.post(`${API}/logs/clear`);
+      setLogs([]);
+      toast.success('Logs cleared successfully');
+    } catch (error) {
+      console.error('Error clearing logs:', error);
+      toast.error('Failed to clear logs');
     }
   };
 
