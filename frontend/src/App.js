@@ -387,36 +387,135 @@ const Dashboard = () => {
 
           {/* Device Tab */}
           <TabsContent value="device">
-            <Card>
-              <CardHeader>
-                <CardTitle>Proxmark3 Device Information</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {deviceStatus ? (
-                  <div className="space-y-4">
-                    <Alert>
-                      <AlertDescription>
-                        <strong>Connection Status:</strong> {deviceStatus.connected ? 'Connected' : 'Not Connected'}
-                      </AlertDescription>
-                    </Alert>
-                    
-                    {deviceStatus.device_path && (
-                      <Alert>
-                        <AlertDescription>
-                          <strong>Device Path:</strong> {deviceStatus.device_path}
-                        </AlertDescription>
-                      </Alert>
-                    )}
-                    
-                    <div className="bg-gray-900 text-green-400 p-4 rounded font-mono text-sm overflow-auto">
-                      <pre>{deviceStatus.output}</pre>
+            <div className="space-y-6">
+              {/* Proxmark3 Device */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <span className="text-xl">📡</span>
+                    Proxmark3 RFID Device
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {deviceStatus ? (
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label className="text-sm font-medium">Status</Label>
+                          <div className="flex items-center gap-2 mt-1">
+                            <div className={`w-3 h-3 rounded-full ${deviceStatus.connected ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                            <span className="text-sm">{deviceStatus.connected ? 'Connected' : 'Disconnected'}</span>
+                          </div>
+                        </div>
+                        <div>
+                          <Label className="text-sm font-medium">Mode</Label>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Badge className={deviceStatus.mock_mode ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'}>
+                              {deviceStatus.mock_mode ? 'Mock Mode' : 'Hardware Mode'}
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {deviceStatus.device_path && (
+                        <div>
+                          <Label className="text-sm font-medium">Device Path</Label>
+                          <p className="text-sm text-gray-600 mt-1 font-mono">{deviceStatus.device_path}</p>
+                        </div>
+                      )}
+                      
+                      <div>
+                        <Label className="text-sm font-medium">Device Output</Label>
+                        <div className="bg-gray-900 text-green-400 p-4 rounded font-mono text-sm overflow-auto mt-2 max-h-40">
+                          <pre>{deviceStatus.output}</pre>
+                        </div>
+                      </div>
+
+                      <Button
+                        onClick={checkDeviceStatus}
+                        variant="outline"
+                        className="w-full"
+                        data-testid="refresh-proxmark-btn"
+                      >
+                        🔄 Refresh Proxmark3 Status
+                      </Button>
                     </div>
-                  </div>
-                ) : (
-                  <p>Loading device information...</p>
-                )}
-              </CardContent>
-            </Card>
+                  ) : (
+                    <div className="text-center py-4">
+                      <p className="text-gray-500">Loading device information...</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Camera Device */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <span className="text-xl">📷</span>
+                    USB Camera Device
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {cameraStatus ? (
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-3 gap-4">
+                        <div>
+                          <Label className="text-sm font-medium">Available</Label>
+                          <div className="flex items-center gap-2 mt-1">
+                            <div className={`w-3 h-3 rounded-full ${cameraStatus.available ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                            <span className="text-sm">{cameraStatus.available ? 'Yes' : 'No'}</span>
+                          </div>
+                        </div>
+                        <div>
+                          <Label className="text-sm font-medium">Initialized</Label>
+                          <div className="flex items-center gap-2 mt-1">
+                            <div className={`w-3 h-3 rounded-full ${cameraStatus.initialized ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                            <span className="text-sm">{cameraStatus.initialized ? 'Yes' : 'No'}</span>
+                          </div>
+                        </div>
+                        <div>
+                          <Label className="text-sm font-medium">Scanning</Label>
+                          <div className="flex items-center gap-2 mt-1">
+                            <div className={`w-3 h-3 rounded-full ${cameraStatus.scanning ? 'bg-blue-500 animate-pulse' : 'bg-gray-400'}`}></div>
+                            <span className="text-sm">{cameraStatus.scanning ? 'Active' : 'Idle'}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {!cameraStatus.available && (
+                        <Alert className="border-yellow-200 bg-yellow-50">
+                          <AlertDescription>
+                            📷 No USB camera detected. Connect a USB webcam to enable barcode scanning.
+                          </AlertDescription>
+                        </Alert>
+                      )}
+
+                      {cameraStatus.available && !cameraStatus.initialized && (
+                        <Alert className="border-blue-200 bg-blue-50">
+                          <AlertDescription>
+                            🔧 Camera available but not initialized. Enable in Settings to use barcode scanning.
+                          </AlertDescription>
+                        </Alert>
+                      )}
+
+                      <Button
+                        onClick={checkCameraStatus}
+                        variant="outline"
+                        className="w-full"
+                        data-testid="refresh-camera-btn"
+                      >
+                        🔄 Refresh Camera Status
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="text-center py-4">
+                      <p className="text-gray-500">Loading camera information...</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           {/* Logs Tab */}
