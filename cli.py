@@ -421,9 +421,15 @@ def main():
     # Program command
     program_parser = subparsers.add_parser('program', help='Program RFID tags for a spool')
     program_parser.add_argument('--sku', required=True, help='Filament SKU')
-    program_parser.add_argument('--spool', required=True, help='Spool ID')
+    program_parser.add_argument('--spool', help='Spool ID (auto-generated if not provided)')
     program_parser.add_argument('--operator', help='Operator name (optional)')
     program_parser.add_argument('--mock', action='store_true', help='Use mock mode for testing')
+    program_parser.add_argument('--manual', action='store_true', help='Use manual mode instead of auto-detection')
+    
+    # Auto-program command (new streamlined command)
+    auto_parser = subparsers.add_parser('auto-program', help='Auto-program RFID tags with detection')
+    auto_parser.add_argument('--sku', required=True, help='Filament SKU')
+    auto_parser.add_argument('--mock', action='store_true', help='Use mock mode for testing')
     
     # List filaments command
     subparsers.add_parser('list-filaments', help='List available filaments')
