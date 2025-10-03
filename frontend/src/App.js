@@ -183,6 +183,7 @@ const Dashboard = () => {
         camera_enabled: newSettings.camera_enabled,
         auto_rfid_detection: newSettings.auto_rfid_detection,
         device_path: newSettings.device_path === 'auto' ? '/dev/ttyACM0' : newSettings.device_path,
+        camera_device_path: newSettings.camera_device_path,
         strict_verification: newSettings.verification_mode === 'strict',
         mock_mode: newSettings.mock_mode,
         retries: newSettings.retry_count,
