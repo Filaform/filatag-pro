@@ -124,14 +124,19 @@ async def device_status(mock: bool = False):
     
     return 0
 
-async def program_spool(sku: str, spool_id: str, operator: Optional[str] = None, mock: bool = False):
-    """Program both RFID tags for a spool"""
+async def program_spool(sku: str, spool_id: str = None, operator: Optional[str] = None, mock: bool = False, auto_detect: bool = True):
+    """Program both RFID tags for a spool with optional auto-detection"""
     config['mock_mode'] = mock
     
     if mock:
         print_warning("Running in MOCK MODE - no actual hardware will be programmed")
     
-    print_info(f"Starting programming session for SKU: {sku}, Spool: {spool_id}")
+    # Generate spool ID if not provided (for auto mode)
+    if not spool_id:
+        spool_id = f"AUTO_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    
+    print_info(f"Starting programming session for SKU: {sku}")
+    print_info(f"Auto-detection mode: {'Enabled' if auto_detect else 'Disabled'}")
     
     # Load filament mapping
     mapping = load_filament_mapping()
@@ -149,7 +154,7 @@ async def program_spool(sku: str, spool_id: str, operator: Optional[str] = None,
     
     print_info(f"Filament: {filament.name}")
     print_info(f"Binary file: {filament.binary_file}")
-    print_info(f"Operator: {operator or 'Not specified'}")
+    print_info(f"Spool ID: {spool_id}")
     
     # Generate session ID
     session_id = f"cli_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
@@ -159,7 +164,8 @@ async def program_spool(sku: str, spool_id: str, operator: Optional[str] = None,
         "sku": sku,
         "spool_id": spool_id,
         "operator": operator,
-        "mock_mode": mock
+        "mock_mode": mock,
+        "auto_detect": auto_detect
     })
     
     # Check device if not in mock mode
@@ -170,12 +176,122 @@ async def program_spool(sku: str, spool_id: str, operator: Optional[str] = None,
             return 1
         print_success(f"Using device: {device_path}")
     
-    # Program both tags
+    if auto_detect:
+        return await program_spool_auto_detect(sku, session_id, binary_path, filament.keys)
+    else:
+        return await program_spool_manual(sku, spool_id, session_id, binary_path, filament.keys, operator)
+
+async def program_spool_auto_detect(sku: str, session_id: str, binary_path: Path, keys: Optional[List[str]]):
+    """Program spool using auto-detection mode"""
+    print("\n🤖 Auto-Detection Mode")
+    print("=" * 50)
+    print_info("Tags will be automatically detected and programmed when placed on antenna")
+    
+    # Import auto-detector
+    from server import get_auto_detector
+    
+    detector = get_auto_detector()
+    
+    # Set up event handlers
+    events = {
+        'tag_detected': False,
+        'programming_started': False,
+        'programming_completed': False,
+        'ready_for_next_tag': False,
+        'session_complete': False,
+        'error': False
+    }
+    
+    def on_tag_detected(data):
+        events['tag_detected'] = True
+        print_success(f"Tag #{data['tag_number']} detected automatically!")
+    
+    def on_programming_started(data):
+        events['programming_started'] = True
+        print_info(f"Auto-programming Tag #{data['tag_number']}...")
+    
+    def on_programming_completed(data):
+        events['programming_completed'] = True
+        print_success(f"Tag #{data['tag_number']} programmed and verified!")
+    
+    def on_ready_for_next_tag(data):
+        events['ready_for_next_tag'] = True
+        print("\n" + "🏷️" * 20)
+        print_info(f"Ready for Tag #{data['tag_number']}")
+        print_info("Remove previous tag and place next tag on antenna...")
+        print("🏷️" * 20)
+    
+    def on_session_complete(data):
+        events['session_complete'] = True
+        print("\n🎉 AUTO-PROGRAMMING COMPLETE!")
+        print("=" * 50)
+        print_success("Both tags programmed successfully using auto-detection!")
+    
+    def on_error(data):
+        events['error'] = True
+        print_error(f"Auto-programming error: {data.get('error', 'Unknown error')}")
+    
+    # Register callbacks
+    detector.set_callback('tag_detected', on_tag_detected)
+    detector.set_callback('programming_started', on_programming_started)  
+    detector.set_callback('programming_completed', on_programming_completed)
+    detector.set_callback('ready_for_next_tag', on_ready_for_next_tag)
+    detector.set_callback('session_complete', on_session_complete)
+    detector.set_callback('programming_error', on_error)
+    detector.set_callback('detection_error', on_error)
+    
+    # Start auto-detection
+    success = await detector.start_auto_detection(sku, session_id)
+    if not success:
+        print_error("Failed to start auto-detection")
+        return 1
+    
+    print_info("Auto-detection started! Place Tag #1 on Proxmark3 antenna...")
+    
+    # Wait for completion or timeout
+    timeout = 300  # 5 minutes
+    start_time = time.time()
+    
+    while detector.scanning and (time.time() - start_time) < timeout:
+        status = detector.get_status()
+        
+        # Print status updates
+        if status['state'] == 'scanning':
+            print(f"⏳ Waiting for Tag #{status['current_tag_number']}...", end='\r')
+        
+        await asyncio.sleep(1)
+        
+        # Check for completion or error
+        if events['session_complete']:
+            break
+        if events['error']:
+            return 1
+    
+    # Stop detection
+    detector.stop_auto_detection()
+    
+    if events['session_complete']:
+        log_action("cli_auto_session_completed", session_id, {
+            "sku": sku,
+            "status": "success",
+            "mode": "auto_detection"
+        })
+        return 0
+    else:
+        print_error("Auto-programming timed out or was interrupted")
+        return 1
+
+async def program_spool_manual(sku: str, spool_id: str, session_id: str, binary_path: Path, keys: Optional[List[str]], operator: Optional[str]):
+    """Program spool using manual mode (legacy)"""
+    print("\n🔧 Manual Programming Mode")
+    print("=" * 40)
+    
+    # Program both tags manually
     for tag_num in [1, 2]:
         print(f"\n🏷️  Programming Tag #{tag_num}")
         print("=" * 40)
         
-        if not mock:
+        if not config.get('mock_mode', False):
             input(f"Place Tag #{tag_num} on the Proxmark3 antenna and press Enter...")
         else:
             print_info(f"Mock: Simulating Tag #{tag_num} placement")
@@ -194,7 +310,7 @@ async def program_spool(sku: str, spool_id: str, operator: Optional[str] = None,
         
         # Program the tag
         print_info("Writing binary data to tag...")
-        result = await program_tag(binary_path, filament.keys)
+        result = await program_tag(binary_path, keys)
         
         if not result["success"]:
             print_error(f"Failed to program Tag #{tag_num}: {result['error']}")
@@ -209,7 +325,7 @@ async def program_spool(sku: str, spool_id: str, operator: Optional[str] = None,
         # Verify the tag
         if config.get("strict_verification", True):
             print_info("Verifying written data...")
-            verified = await verify_tag(binary_path, result["hash"], filament.keys)
+            verified = await verify_tag(binary_path, result["hash"], keys)
             
             if verified:
                 print_success(f"Tag #{tag_num} verification PASSED")
@@ -235,14 +351,15 @@ async def program_spool(sku: str, spool_id: str, operator: Optional[str] = None,
             })
     
     # Success
-    print("\n🎉 Programming Complete!")
+    print("\n🎉 Manual Programming Complete!")
     print("=" * 40)
     print_success(f"Both tags programmed successfully for spool {spool_id}")
     
-    log_action("session_completed", session_id, {
+    log_action("cli_session_completed", session_id, {
         "sku": sku,
         "spool_id": spool_id,
-        "status": "success"
+        "status": "success",
+        "mode": "manual"
     })
     
     return 0
