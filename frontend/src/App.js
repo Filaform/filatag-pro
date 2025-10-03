@@ -711,10 +711,20 @@ const Dashboard = () => {
                     <Button
                       onClick={startProgramming}
                       disabled={loading || !selectedFilament}
-                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
+                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-6 text-lg rounded-xl shadow-lg min-h-[60px]"
                       data-testid="start-auto-programming-btn"
                     >
-                      {loading ? 'Starting Auto-Programming...' : '🚀 Start Auto-Programming'}
+                      {loading ? (
+                        <span className="flex items-center gap-2">
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          Starting...
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2">
+                          <span className="text-xl">🚀</span>
+                          START PROGRAMMING
+                        </span>
+                      )}
                     </Button>
                   </div>
                 </CardContent>
