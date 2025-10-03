@@ -136,27 +136,51 @@ const Dashboard = () => {
   };
 
   const startProgramming = async () => {
-    if (!selectedFilament || !spoolId) {
-      toast.error('Please select filament and enter spool ID');
+    if (!selectedFilament) {
+      toast.error('Please select a filament type');
       return;
     }
 
     setLoading(true);
     try {
-      const response = await axios.post(`${API}/programming/start`, {
-        sku: selectedFilament,
-        spool_id: spoolId,
-        operator: operator || undefined
-      });
-      
-      setCurrentSession(response.data);
-      setShowProgramming(true);
-      toast.success('Programming session started');
+      if (autoDetectionMode) {
+        // Start auto-programming session
+        const response = await axios.post(`${API}/auto-programming/start`, {
+          sku: selectedFilament
+        });
+        
+        setCurrentSession(response.data);
+        setShowProgramming(true);
+        toast.success('Auto-programming started - place Tag #1 on antenna');
+      } else {
+        // Legacy manual mode (if needed)
+        const response = await axios.post(`${API}/programming/start`, {
+          sku: selectedFilament,
+          spool_id: `AUTO_${Date.now()}`,
+          operator: 'AutoSystem'
+        });
+        
+        setCurrentSession(response.data);
+        setShowProgramming(true);
+        toast.success('Programming session started');
+      }
     } catch (error) {
       toast.error('Failed to start programming session');
       console.error('Error starting session:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const stopProgramming = async () => {
+    try {
+      await axios.post(`${API}/auto-programming/stop`);
+      setCurrentSession(null);
+      setShowProgramming(false);
+      setAutoSessionStatus(null);
+      toast.info('Programming stopped');
+    } catch (error) {
+      console.error('Error stopping programming:', error);
     }
   };
 
