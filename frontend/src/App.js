@@ -35,13 +35,18 @@ const Dashboard = () => {
   const [filaments, setFilaments] = useState([]);
   const [deviceStatus, setDeviceStatus] = useState(null);
   const [selectedFilament, setSelectedFilament] = useState('');
-  const [spoolId, setSpoolId] = useState('');
-  const [operator, setOperator] = useState('');
   const [loading, setLoading] = useState(false);
   const [currentSession, setCurrentSession] = useState(null);
   const [showProgramming, setShowProgramming] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [logs, setLogs] = useState([]);
+  
+  // Auto-detection states
+  const [cameraStatus, setCameraStatus] = useState(null);
+  const [autoDetectionMode, setAutoDetectionMode] = useState(true);
+  const [barcodeScanResult, setBarcodeScanResult] = useState(null);
+  const [autoSessionStatus, setAutoSessionStatus] = useState(null);
+  const [cameraFrame, setCameraFrame] = useState(null);
 
   useEffect(() => {
     loadFilaments();
