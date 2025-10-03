@@ -451,6 +451,28 @@ async def verify_tag(binary_path: Path, expected_hash: str, keys: List[str] = No
     read_hash = hashlib.sha256(read_data).hexdigest()
     return read_hash == expected_hash
 
+# Import auto-detection and camera modules
+try:
+    from camera_scanner import initialize_camera_scanner, get_scanner, get_barcode_mapper, cleanup_camera_scanner
+    from auto_detector import get_auto_detector, start_auto_programming_session, stop_auto_programming_session
+    CAMERA_AVAILABLE = True
+except ImportError as e:
+    logger.warning(f"Camera/barcode scanning not available: {e}")
+    CAMERA_AVAILABLE = False
+
+# New Models for Auto Detection
+class AutoProgrammingRequest(BaseModel):
+    sku: str
+
+class BarcodeMapping(BaseModel):
+    barcode: str
+    sku: str
+
+class CameraStatus(BaseModel):
+    available: bool
+    initialized: bool
+    scanning: bool
+
 # API Routes
 @api_router.get("/filaments", response_model=List[Filament])
 async def get_filaments():
