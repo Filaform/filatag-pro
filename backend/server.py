@@ -243,9 +243,13 @@ async def run_proxmark_command(command: str, timeout: int = 30, device_path: str
             "return_code": -1
         }
 
+# Global mock storage to simulate written data
+mock_tag_data = {}
+
 async def mock_proxmark_command(command: str) -> Dict[str, Any]:
     """Mock proxmark command for testing"""
-    await asyncio.sleep(0.5)  # Simulate command delay
+    global mock_tag_data
+    await asyncio.sleep(0.2)  # Simulate command delay
     
     if "hw status" in command:
         return {
@@ -262,6 +266,14 @@ async def mock_proxmark_command(command: str) -> Dict[str, Any]:
             "return_code": 0
         }
     elif "hf mf wrbl" in command:
+        # Parse write command: "hf mf wrbl <block> A <key> <data>"
+        parts = command.split()
+        if len(parts) >= 6:
+            block_num = int(parts[3])
+            hex_data = parts[6]
+            # Store the written data for later reading
+            mock_tag_data[block_num] = hex_data
+        
         return {
             "success": True,
             "output": "Block written successfully",
@@ -269,6 +281,32 @@ async def mock_proxmark_command(command: str) -> Dict[str, Any]:
             "return_code": 0
         }
     elif "hf mf rdbl" in command:
+        # Parse read command: "hf mf rdbl <block> A <key>"
+        parts = command.split()
+        if len(parts) >= 4:
+            block_num = int(parts[3])
+            # Return previously written data or default pattern
+            if block_num in mock_tag_data:
+                hex_data = mock_tag_data[block_num]
+                # Format as Proxmark3 would output
+                formatted_hex = ' '.join(hex_data[i:i+2] for i in range(0, len(hex_data), 2))
+                return {
+                    "success": True,
+                    "output": f"Block data: {formatted_hex.upper()}",
+                    "error": "",
+                    "return_code": 0
+                }
+            else:
+                # Default pattern for unwritten blocks
+                pattern = f"{block_num:02X}" * 16
+                formatted_hex = ' '.join(pattern[i:i+2] for i in range(0, len(pattern), 2))
+                return {
+                    "success": True,
+                    "output": f"Block data: {formatted_hex}",
+                    "error": "",
+                    "return_code": 0
+                }
+        
         return {
             "success": True,
             "output": "Block data: 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F",
