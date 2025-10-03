@@ -31,9 +31,7 @@ const getStatusColor = (status) => {
   }
 };
 
-// SettingsPanel component moved inside Dashboard component below
-
-// Duplicate content removed - SettingsPanel component is now properly defined above
+// SettingsPanel component is defined inside the Dashboard component below
 
 
 // Main Dashboard Component
