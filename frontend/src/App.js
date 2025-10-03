@@ -713,7 +713,7 @@ const Dashboard = () => {
                     <Button
                       onClick={startProgramming}
                       disabled={loading || !selectedFilament}
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-6 text-lg rounded-xl shadow-lg min-h-[60px]"
+                      className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold py-6 text-lg rounded-xl shadow-lg min-h-[60px] border border-emerald-500/30"
                       data-testid="start-auto-programming-btn"
                     >
                       {loading ? (
