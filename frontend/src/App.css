@@ -1,10 +1,36 @@
 /* Import modern fonts */
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* Root styles */
+/* Root styles - Optimized for 7" touchscreen */
 :root {
   --font-primary: 'Space Grotesk', sans-serif;
   --font-secondary: 'Inter', sans-serif;
+}
+
+/* Touchscreen optimizations */
+@media screen and (max-width: 1024px) and (max-height: 600px) {
+  * {
+    font-size: 14px;
+  }
+  
+  /* Larger touch targets */
+  button, .select-trigger, input {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Reduce spacing */
+  .space-y-6 > * + * {
+    margin-top: 1rem;
+  }
+  
+  .space-y-4 > * + * {
+    margin-top: 0.75rem;
+  }
+  
+  .space-y-3 > * + * {
+    margin-top: 0.5rem;
+  }
 }
 
 * {
