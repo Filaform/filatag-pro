@@ -654,41 +654,36 @@ const Dashboard = () => {
                     </Badge>
                   </div>
 
-                  {/* Filament Selection */}
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2 mb-2">
+                  {/* Compact Filament Selection */}
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
                       <span className="text-lg">🏷️</span>
-                      <span className="font-medium">Step 2: Confirm Filament Type</span>
+                      <span className="font-medium text-sm">Filament Type</span>
                     </div>
                     
-                    <div>
-                      <Label htmlFor="search">Search Filaments</Label>
-                      <Input
-                        id="search"
-                        placeholder="Search by SKU, name, or description..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        data-testid="filament-search-input"
-                      />
-                    </div>
+                    <Input
+                      placeholder="Search filaments..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      data-testid="filament-search-input"
+                      className="h-10 text-base"
+                    />
 
-                    <div>
-                      <Select value={selectedFilament} onValueChange={setSelectedFilament}>
-                        <SelectTrigger data-testid="filament-select">
-                          <SelectValue placeholder="Choose filament..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {filteredFilaments.map((filament) => (
-                            <SelectItem key={filament.sku} value={filament.sku}>
-                              <div className="flex flex-col">
-                                <span className="font-medium">{filament.sku} - {filament.name}</span>
-                                <span className="text-sm text-gray-500">{filament.description}</span>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    <Select value={selectedFilament} onValueChange={setSelectedFilament}>
+                      <SelectTrigger data-testid="filament-select" className="h-12 text-base">
+                        <SelectValue placeholder="Select filament type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {filteredFilaments.map((filament) => (
+                          <SelectItem key={filament.sku} value={filament.sku} className="h-12">
+                            <div>
+                              <div className="font-medium">{filament.sku} - {filament.name}</div>
+                              <div className="text-xs text-gray-500">{filament.description}</div>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   {/* Programming Controls */}
