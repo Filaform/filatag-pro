@@ -162,6 +162,7 @@ const Dashboard = () => {
         camera_enabled: response.data.camera_enabled ?? true,
         auto_rfid_detection: response.data.auto_rfid_detection ?? true,
         device_path: response.data.device_path || 'auto',
+        camera_device_path: response.data.camera_device_path || '/dev/video0',
         verification_mode: response.data.strict_verification ? 'strict' : 'tolerant',
         mock_mode: response.data.mock_mode ?? false,
         retry_count: response.data.retries ?? 3,
