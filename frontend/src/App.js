@@ -99,6 +99,42 @@ const Dashboard = () => {
     }
   };
 
+  const checkCameraStatus = async () => {
+    try {
+      const response = await axios.get(`${API}/camera/status`);
+      setCameraStatus(response.data);
+    } catch (error) {
+      console.error('Error checking camera status:', error);
+      setCameraStatus({ available: false, initialized: false, scanning: false });
+    }
+  };
+
+  const scanBarcode = async () => {
+    if (!cameraStatus?.initialized) return;
+    
+    try {
+      const response = await axios.get(`${API}/barcode/scan`);
+      if (response.data.barcode && response.data.sku) {
+        setBarcodeScanResult(response.data);
+        setSelectedFilament(response.data.sku);
+        toast.success(`Barcode detected: ${response.data.sku}`);
+      }
+    } catch (error) {
+      console.error('Error scanning barcode:', error);
+    }
+  };
+
+  const checkAutoSessionStatus = async () => {
+    if (!currentSession) return;
+    
+    try {
+      const response = await axios.get(`${API}/auto-programming/status`);
+      setAutoSessionStatus(response.data);
+    } catch (error) {
+      console.error('Error checking auto-session status:', error);
+    }
+  };
+
   const startProgramming = async () => {
     if (!selectedFilament || !spoolId) {
       toast.error('Please select filament and enter spool ID');
