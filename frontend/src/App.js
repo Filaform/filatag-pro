@@ -512,32 +512,40 @@ const ProgrammingModal = ({ session, open, onClose }) => {
     return () => clearInterval(interval);
   }, [open, session]);
 
-  const programTag = async (tagNum) => {
+  const stopAutoProgram = async () => {
     try {
-      await axios.post(`${API}/programming/${sessionData.id}/tag/${tagNum}`);
-      toast.success(`Programming Tag ${tagNum}...`);
+      await axios.post(`${API}/auto-programming/stop`);
+      onClose();
+      toast.info('Auto-programming stopped');
     } catch (error) {
-      toast.error(`Failed to start programming Tag ${tagNum}`);
-      console.error('Error programming tag:', error);
+      console.error('Error stopping auto-programming:', error);
     }
   };
 
-  const getTagStatus = (tagNum) => {
-    return tagNum === 1 ? sessionData?.tag1_status : sessionData?.tag2_status;
+  const getAutoStateDisplay = (state) => {
+    const stateMap = {
+      'idle': { text: 'Ready', color: 'bg-gray-400' },
+      'scanning': { text: 'Waiting for Tag', color: 'bg-blue-500 animate-pulse' },
+      'tag_detected': { text: 'Tag Detected', color: 'bg-yellow-500' },
+      'programming': { text: 'Programming', color: 'bg-blue-600 animate-pulse' },
+      'verifying': { text: 'Verifying', color: 'bg-purple-500 animate-pulse' },
+      'complete': { text: 'Complete', color: 'bg-green-500' },
+      'error': { text: 'Error', color: 'bg-red-500' }
+    };
+    return stateMap[state] || stateMap['idle'];
   };
 
   const getProgressValue = () => {
-    if (!sessionData) return 0;
+    if (!autoStatus) return 0;
     
-    const tag1Complete = ['pass', 'fail', 'error'].includes(sessionData.tag1_status);
-    const tag2Complete = ['pass', 'fail', 'error'].includes(sessionData.tag2_status);
-    
-    if (tag1Complete && tag2Complete) return 100;
-    if (tag1Complete) return 50;
-    return sessionData.tag1_status !== 'pending' ? 25 : 0;
+    if (autoStatus.state === 'complete') return 100;
+    if (autoStatus.current_tag_number === 2) return 75;
+    if (autoStatus.state === 'programming' || autoStatus.state === 'verifying') return 50;
+    if (autoStatus.state === 'tag_detected') return 25;
+    return 10;
   };
 
-  if (!sessionData) return null;
+  if (!session) return null;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
