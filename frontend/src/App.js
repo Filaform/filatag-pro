@@ -561,28 +561,30 @@ const Dashboard = () => {
       <div className="container mx-auto px-3 py-3 max-w-none h-screen max-h-[600px]">
         {/* Compact Touchscreen Header */}
         <div className="mb-4">
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-4 shadow-lg">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-4 shadow-lg border border-slate-700">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <img 
-                  src="/filaform-logo.png" 
-                  alt="Filaform" 
-                  className="h-8 w-auto"
-                />
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
+                  <img 
+                    src="/filaform-logo.png" 
+                    alt="Filaform" 
+                    className="h-6 w-auto drop-shadow-sm"
+                  />
+                </div>
                 <div>
-                  <h1 className="text-xl font-bold text-white">
+                  <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
                     FilaTag PRO
                   </h1>
-                  <p className="text-blue-100 text-xs font-medium">
+                  <p className="text-slate-300 text-xs font-medium tracking-wide">
                     RFID Programming System
                   </p>
                 </div>
               </div>
               
               {/* Compact Status */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 rounded-full border border-green-400/30">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-blue-100 text-xs font-medium">Ready</span>
+                <span className="text-green-400 text-xs font-medium">System Ready</span>
               </div>
             </div>
           </div>
