@@ -370,7 +370,7 @@ echo '{"mock_mode": true}' > /etc/filatag/config.json
 
 ```bash
 # Clone repository for development
-git clone https://github.com/your-organization/filatag-pro.git
+git clone https://github.com/Filaform/filatag-pro.git
 cd filatag-pro
 
 # Install development dependencies
