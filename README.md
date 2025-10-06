@@ -222,15 +222,69 @@ sudo supervisorctl status
 
 ### Step 7: Verify Installation
 
-## Usage
+```bash
+# Test CLI functionality
+cd /opt/filatag
+python3 cli.py list-filaments
+python3 cli.py device-status --mock
 
-### Web Interface
+# Test auto-programming in mock mode
+python3 cli.py auto-program --sku PLA001 --mock
 
-1. **Access**: Open `http://[raspberry-pi-ip]:3000` in your browser
-2. **Select Filament**: Choose SKU from searchable dropdown
-3. **Enter Spool ID**: Provide unique spool identifier
-4. **Program Tags**: Follow on-screen prompts for Tag #1 and Tag #2
-5. **View Logs**: Check programming history and results
+# Run comprehensive demo
+python3 filaform_demo.py
+
+# Check web interface (should show FilaTag Pro interface)
+curl -s http://localhost:3000 | grep "FilaTag PRO"
+
+# Check API endpoints
+curl -s http://localhost:8001/api/device/status
+curl -s http://localhost:8001/api/filaments
+
+# Verify logs
+tail -f /var/log/filatag/actions.log
+```
+
+## 🚀 Quick Start Guide
+
+### First Time Setup
+
+1. **Connect Hardware**: 
+   - Plug in Proxmark3 via USB
+   - Connect USB camera for barcode scanning
+   - Ensure 7-inch touchscreen is connected and configured
+
+2. **Access Web Interface**: 
+   - Open browser on connected device
+   - Navigate to `http://[raspberry-pi-ip]:3000`
+   - You should see the FilaTag Pro interface
+
+3. **Test System**:
+   - Check "Status" tab to verify Proxmark3 and camera connection
+   - Try programming a test spool in mock mode
+   - Review logs to ensure everything is working
+
+### Daily Operation
+
+1. **Power On**: System should auto-start with touchscreen interface
+2. **Scan Barcode**: Point camera at filament spool barcode (optional)
+3. **Select Filament**: Choose from dropdown or use barcode detection
+4. **Start Programming**: Tap the green "START PROGRAMMING" button
+5. **Place Tags**: Follow on-screen prompts for Tag #1 and Tag #2
+6. **Complete**: System automatically programs and verifies both tags
+
+## 💻 Usage
+
+### Touchscreen Interface (Primary Method)
+
+**Optimized for 7-inch displays (1024x600 resolution)**
+
+1. **Access**: Touch interface should auto-start on boot
+2. **Barcode Scan**: Camera automatically detects UPC/EAN barcodes
+3. **Select Filament**: Touch dropdown or use auto-detected type
+4. **Start Programming**: Large green button starts automated workflow
+5. **Follow Prompts**: Place Tag #1, then Tag #2 when prompted
+6. **View Status**: Check system status and logs via touch navigation
 
 ### CLI Tool
 
