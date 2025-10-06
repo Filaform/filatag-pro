@@ -143,17 +143,45 @@ chmod +x *.py
 ### Step 5: Create Directory Structure and Configuration
 
 ```bash
-# Create required directories
+# Create system directories
 sudo mkdir -p /opt/filatag/binaries
 sudo mkdir -p /etc/filatag
 sudo mkdir -p /var/log/filatag
 
-# Set permissions
-sudo chown -R $USER:$USER /opt/filatag
+# Copy configuration files from repository
+sudo cp /opt/filatag/config/config.json /etc/filatag/
+sudo cp /opt/filatag/config/mapping.json /etc/filatag/
+sudo cp /opt/filatag/config/barcode_mapping.json /etc/filatag/
+
+# Create sample binary files (for testing)
+cd /opt/filatag
+python3 -c "
+import os
+from pathlib import Path
+
+binaries_path = Path('/opt/filatag/binaries')
+binaries_path.mkdir(exist_ok=True)
+
+for sku in ['pla001', 'abs002', 'petg003', 'tpu004', 'wood005']:
+    with open(binaries_path / f'{sku}.bin', 'wb') as f:
+        # Create 1KB sample binary data
+        data = bytearray(1024)
+        pattern = hash(sku) % 256
+        for i in range(1024):
+            data[i] = (pattern + i) % 256
+        f.write(data)
+    print(f'Created {sku}.bin (1024 bytes)')
+"
+
+# Set proper permissions
+sudo chown -R filatag:filatag /opt/filatag
+sudo chown -R filatag:filatag /etc/filatag
+sudo chown -R filatag:filatag /var/log/filatag
 sudo chmod 755 /var/log/filatag
+sudo chmod 644 /etc/filatag/*
 ```
 
-### 5. Configure Application
+### Step 6: Configure Services
 
 ```bash
 # Copy configuration files
