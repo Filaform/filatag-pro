@@ -142,9 +142,12 @@ cd /opt/filatag
 python3 -m venv venv
 source venv/bin/activate
 
-# Install Python dependencies
+# Install Python dependencies (compatible with Python 3.9.2+)
 pip install --upgrade pip
 pip install -r backend/requirements.txt
+
+# Note: Requirements.txt is optimized for Python 3.9.2+ compatibility
+# Specifically tested on Sonic Pad (Python 3.11.9) and Raspberry Pi systems
 
 # Install Node.js dependencies (using yarn for better performance)
 cd frontend
