@@ -113,24 +113,34 @@ echo "Please logout and login again for group permissions to take effect"
 ### Step 4: Install FilaTag Pro Application
 
 ```bash
-# Clone or copy the application files to /opt/filatag
+# Navigate back to cloned repository
+cd /path/to/filatag-pro  # Or wherever you cloned it
+
+# Copy application to system directory
 sudo mkdir -p /opt/filatag
-sudo cp -r /app/* /opt/filatag/
+sudo cp -r * /opt/filatag/
+sudo chown -R $USER:$USER /opt/filatag
 cd /opt/filatag
 
-# Create virtual environment
+# Create Python virtual environment
 python3 -m venv venv
 source venv/bin/activate
 
-# Install Python dependencies  
+# Install Python dependencies
+pip install --upgrade pip
 pip install -r backend/requirements.txt
 
-# Install Node.js dependencies
-cd frontend && npm install
+# Install Node.js dependencies (using yarn for better performance)
+cd frontend
+yarn install
 cd ..
+
+# Make CLI executable
+chmod +x cli.py
+chmod +x *.py
 ```
 
-### 4. Create Directory Structure
+### Step 5: Create Directory Structure and Configuration
 
 ```bash
 # Create required directories
