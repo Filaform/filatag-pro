@@ -121,17 +121,29 @@ backend:
         comment: "COMPREHENSIVE TESTING COMPLETED: All backend APIs working perfectly after Python 3.9.2 compatibility updates. Core API Tests (13/13 passed): ✅ Filaments API, ✅ Device Status (mock mode), ✅ Configuration API, ✅ Logs API, ✅ Programming Sessions, ✅ Tag Programming, ✅ Error Handling. Extended API Tests (8/8 passed): ✅ Camera Status, ✅ Barcode Scanning, ✅ Auto-Programming, ✅ Logs Clearing, ✅ Config Updates. Python Compatibility Tests (3/3 passed): ✅ All 32 required packages import successfully, ✅ Backend server imports working, ✅ No dependency conflicts. Backend logs show clean operation with no errors. All functionality preserved after requirements.txt updates."
 
 frontend:
-  - task: "No frontend changes required"
+  - task: "Documentation Updates"
     implemented: true
     working: "NA"
-    file: "N/A"
+    file: "/app/README.md"
     stuck_count: 0
-    priority: "low"
+    priority: "medium"
     needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "No frontend modifications needed for Python compatibility fix"
+        comment: "Updated README.md with correct Sonic Pad hardware specifications (Debian 11, Python 3.11.9, ARM Cortex-A53), added desktop app usage instructions for headless systems, updated GitHub repository URL to https://github.com/Filaform/filatag-pro/, and added Python compatibility notes."
+
+  - task: "Desktop App Dependencies"
+    implemented: true
+    working: "NA"  
+    file: "/app/desktop_app.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added pywebview>=4.0.0 to requirements.txt for desktop GUI support on headless systems. Desktop app already implemented and ready to use for embedded devices without desktop environment."
 
 metadata:
   created_by: "main_agent"
