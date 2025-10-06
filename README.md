@@ -184,19 +184,43 @@ sudo chmod 644 /etc/filatag/*
 ### Step 6: Configure Services
 
 ```bash
-# Copy configuration files
-sudo cp /opt/filatag/filatag.service /etc/systemd/system/
-sudo cp config/config.json /etc/filatag/
-sudo cp config/mapping.json /etc/filatag/
+# Create user for running FilaTag services
+sudo useradd -r -s /bin/false -d /opt/filatag filatag
+sudo usermod -a -G plugdev,video,dialout filatag
 
-# Enable and start service
+# Install systemd service file
+sudo cp /opt/filatag/filatag.service /etc/systemd/system/
+
+# Configure supervisor for service management
+sudo cp /opt/filatag/config/supervisor.conf /etc/supervisor/conf.d/filatag.conf
+
+# Configure MongoDB for FilaTag
+sudo systemctl enable mongodb
+sudo systemctl start mongodb
+
+# Create MongoDB database and user
+mongo << 'EOF'
+use filatag_db
+db.createUser({
+  user: "filatag",
+  pwd: "secure_password_here",
+  roles: [{ role: "readWrite", db: "filatag_db" }]
+})
+EOF
+
+# Start and enable services
 sudo systemctl daemon-reload
 sudo systemctl enable filatag
-sudo systemctl start filatag
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl start filatag:*
 
 # Check service status
 sudo systemctl status filatag
+sudo supervisorctl status
 ```
+
+### Step 7: Verify Installation
 
 ## Usage
 
