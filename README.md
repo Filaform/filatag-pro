@@ -17,18 +17,34 @@ A complete, production-ready RFID programming solution for filament spools using
 
 ## 🏭 Hardware Requirements
 
+### Tested & Supported Platforms
+
+#### Sonic Pad (Primary Target)
+- **OS**: Debian 11 (Bullseye)
+- **Kernel**: 4.9.191
+- **CPU**: 4-core ARM Cortex-A53 @ 1.5 GHz (aarch64)
+- **Python**: 3.11.9+ (3.9.2+ minimum supported)
+- **Memory**: ~2 GB RAM
+- **Display**: Built-in touchscreen interface
+- **Status**: ✅ Fully supported with native desktop app
+
+#### Raspberry Pi 4B+ (Alternative)
+- **OS**: Raspberry Pi OS (64-bit) or Ubuntu 20.04+
+- **CPU**: ARM Cortex-A72 quad-core @ 1.8 GHz
+- **Memory**: 4GB+ RAM recommended
+- **Display**: 7-inch touchscreen (1024x600 resolution)
+- **Status**: ✅ Fully supported
+
 ### Essential Components
-- **Linux SBC**: Raspberry Pi 4B (4GB RAM recommended) or compatible ARM64/x86_64 system
-- **Touchscreen**: 7-inch display with 1024x600 resolution (capacitive touch recommended)
 - **Proxmark3**: Iceman fork v4.18994+ ⚠️ Original Proxmark3 firmware NOT supported
 - **USB Camera**: For barcode scanning (UPC/EAN compatible)
 - **RFID Tags**: MIFARE Classic S50 (1K) tags for filament spools
 
-### Recommended Setup
-- **Mounting**: Industrial touchscreen enclosure for manufacturing environment
-- **Connectivity**: Ethernet connection for reliable network access
-- **Power**: 5V 3A+ power supply for stable operation
-- **Storage**: 32GB+ microSD card (Class 10 or better)
+### For Headless Systems (No Desktop Environment)
+FilaTag Pro includes a **native desktop application** that works without a desktop environment:
+- Uses `pywebview` for embedded GUI on systems without X11/Wayland
+- Automatically detects and adapts to available GUI frameworks
+- Perfect for industrial controllers and embedded devices
 
 ## 📥 Installation
 
