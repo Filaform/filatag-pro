@@ -82,10 +82,11 @@ pm3 --version
 
 ### Step 3: Setup Proxmark3 Permissions
 
-Create udev rules for Proxmark3 device access:
+Create udev rules for hardware device access:
 
 ```bash
-sudo tee /etc/udev/rules.d/77-proxmark3.rules << EOF
+# Create Proxmark3 device rules
+sudo tee /etc/udev/rules.d/77-proxmark3.rules << 'EOF'
 # Proxmark3 RDV4.0, Proxmark3 Easy
 SUBSYSTEM=="usb", ATTRS{idVendor}=="2d2d", ATTRS{idProduct}=="504d", GROUP="plugdev", MODE="0664"
 SUBSYSTEM=="usb", ATTRS{idVendor}=="9ac4", ATTRS{idProduct}=="4b8f", GROUP="plugdev", MODE="0664"
@@ -93,15 +94,23 @@ SUBSYSTEM=="usb", ATTRS{idVendor}=="9ac4", ATTRS{idProduct}=="4b8f", GROUP="plug
 KERNEL=="ttyACM[0-9]*", ATTRS{idVendor}=="2d2d", ATTRS{idProduct}=="504d", GROUP="plugdev", MODE="0664"
 EOF
 
-# Reload udev rules
+# Create camera device rules (optional, for specific camera access)
+sudo tee -a /etc/udev/rules.d/77-camera.rules << 'EOF'
+# USB Camera devices
+KERNEL=="video[0-9]*", GROUP="video", MODE="0664"
+SUBSYSTEM=="video4linux", GROUP="video", MODE="0664"
+EOF
+
+# Reload udev rules and add user to groups
 sudo udevadm control --reload-rules
 sudo udevadm trigger
+sudo usermod -a -G plugdev,video,dialout $USER
 
-# Add current user to plugdev group
-sudo usermod -a -G plugdev $USER
+# Logout and login again for group changes to take effect
+echo "Please logout and login again for group permissions to take effect"
 ```
 
-### 3. Install Application
+### Step 4: Install FilaTag Pro Application
 
 ```bash
 # Clone or copy the application files to /opt/filatag
