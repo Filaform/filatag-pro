@@ -53,20 +53,34 @@ unzip main.zip
 cd filatag-pro-main
 ```
 
-### 1. Install System Dependencies
+### Step 2: Install System Dependencies
 
 ```bash
-# Update system
+# Update system packages
 sudo apt update && sudo apt upgrade -y
 
-# Install required packages
-sudo apt install -y python3 python3-pip python3-venv nodejs npm git
+# Install essential packages
+sudo apt install -y \
+    python3 python3-pip python3-venv \
+    nodejs npm yarn \
+    git curl wget \
+    build-essential \
+    libopencv-dev python3-opencv \
+    mongodb \
+    supervisor nginx
 
-# Install Proxmark3 (Iceman fork)
-# Follow official installation guide at: https://github.com/RfidResearchGroup/proxmark3
+# Install Proxmark3 Iceman Fork
+cd /tmp
+git clone https://github.com/RfidResearchGroup/proxmark3.git
+cd proxmark3
+make clean && make all
+sudo make install
+
+# Verify Proxmark3 installation
+pm3 --version
 ```
 
-### 2. Setup Proxmark3 Permissions
+### Step 3: Setup Proxmark3 Permissions
 
 Create udev rules for Proxmark3 device access:
 
