@@ -324,9 +324,99 @@ echo '{"mock_mode": true}' > /etc/filatag/config.json
 - Full programming workflow testing
 - No hardware required
 
-## Tech Stack
+## 🛠️ Development & Contributing
 
-- **Backend**: FastAPI + Python with async Proxmark3 communication
-- **Frontend**: React with real-time WebSocket updates
-- **Database**: MongoDB for session and log storage
-- **Hardware**: Proxmark3 Iceman fork for RFID operations
+### Development Setup
+
+```bash
+# Clone repository for development
+git clone https://github.com/your-organization/filatag-pro.git
+cd filatag-pro
+
+# Install development dependencies
+pip install -r requirements-dev.txt
+yarn install --dev
+
+# Run in development mode
+# Backend (with hot reload)
+cd backend && python server.py
+
+# Frontend (with hot reload)  
+cd frontend && yarn start
+
+# Run tests
+python -m pytest tests/
+yarn test
+```
+
+### Project Structure
+
+```
+filatag-pro/
+├── backend/                 # FastAPI backend application
+│   ├── server.py           # Main server application
+│   ├── camera_scanner.py   # Barcode scanning module
+│   ├── auto_detector.py    # RFID auto-detection module
+│   └── requirements.txt    # Python dependencies
+├── frontend/               # React frontend application  
+│   ├── src/
+│   │   ├── App.js         # Main application component
+│   │   ├── components/ui/ # Shadcn UI components
+│   │   └── App.css        # Touchscreen-optimized styles
+│   ├── public/            # Static assets and favicon
+│   └── package.json       # Node.js dependencies
+├── config/                # Configuration templates
+│   ├── config.json        # System configuration
+│   ├── mapping.json       # Filament SKU mapping
+│   └── supervisor.conf    # Service configuration
+├── tests/                 # Test suites
+│   ├── test_filatag.py   # Unit tests
+│   └── integration/       # Integration tests
+├── cli.py                 # Command-line interface
+├── filaform_demo.py      # Comprehensive demo script
+├── filatag.service       # Systemd service file
+└── README.md             # This file
+```
+
+### Contributing
+
+1. Fork the repository on GitHub
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Reporting Issues
+
+Please report issues on the GitHub issue tracker with:
+- FilaTag Pro version
+- Hardware configuration (Raspberry Pi model, Proxmark3 version)
+- Steps to reproduce the issue
+- Expected vs actual behavior
+- Log files from `/var/log/filatag/actions.log`
+
+## 🧪 Tech Stack
+
+- **Backend**: FastAPI + Python 3.9+ with async Proxmark3 communication
+- **Frontend**: React 19 with Shadcn UI components, optimized for touchscreens
+- **Database**: MongoDB for session storage and audit logging
+- **Hardware**: Proxmark3 Iceman fork v4.18994+ for RFID operations
+- **Camera**: OpenCV + pyzbar for UPC/EAN barcode scanning
+- **Services**: Supervisor for process management, systemd for system integration
+
+## 📋 System Requirements
+
+### Minimum Requirements
+- **CPU**: ARM Cortex-A72 1.5GHz (Raspberry Pi 4B) or equivalent x86_64
+- **RAM**: 2GB (4GB recommended for optimal performance)
+- **Storage**: 16GB microSD/eMMC (32GB recommended)
+- **Display**: 7-inch touchscreen with 1024x600 resolution
+- **USB Ports**: 2x USB 2.0+ (Proxmark3 + camera)
+- **Network**: Ethernet or Wi-Fi for web interface access
+
+### Recommended Configuration
+- **Device**: Raspberry Pi 4B (4GB RAM)
+- **Display**: Official Raspberry Pi 7" touchscreen or equivalent
+- **Storage**: SanDisk Extreme 32GB microSD (Class 10, A2)
+- **Case**: Industrial touchscreen enclosure with DIN rail mounting
+- **Power**: Official Raspberry Pi 4 Power Supply (5.1V, 3A)
