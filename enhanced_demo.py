@@ -77,7 +77,7 @@ def demo_enhanced_interface():
     """Demo the enhanced web interface features"""
     print_header("Enhanced Web Interface Demo", "🌐")
     
-    base_url = "https://filatagger.preview.emergentagent.com/api"
+    base_url = "https://mifare-writer.preview.emergentagent.com/api"
     
     print_step("Testing simplified device status", "📟")
     success, data = test_api_endpoint(f"{base_url}/device/status")
@@ -99,7 +99,7 @@ def demo_settings_management():
     """Demo comprehensive settings management"""
     print_header("Settings Management Demo", "⚙️")
     
-    base_url = "https://filatagger.preview.emergentagent.com/api"
+    base_url = "https://mifare-writer.preview.emergentagent.com/api"
     
     print_step("Loading current configuration", "📋")
     success, data = test_api_endpoint(f"{base_url}/config")
@@ -130,7 +130,7 @@ def demo_barcode_system():
     """Demo barcode scanning and mapping system"""
     print_header("Barcode System Demo", "📷")
     
-    base_url = "https://filatagger.preview.emergentagent.com/api"
+    base_url = "https://mifare-writer.preview.emergentagent.com/api"
     
     print_step("Testing barcode mappings", "🏷️")
     success, data = test_api_endpoint(f"{base_url}/barcode/mappings")
@@ -172,7 +172,7 @@ def demo_auto_programming():
         print(output[-200:])
     
     print_step("Testing Web API auto-programming", "🌐")
-    base_url = "https://filatagger.preview.emergentagent.com/api"
+    base_url = "https://mifare-writer.preview.emergentagent.com/api"
     
     # Start auto-programming session
     success, session_data = test_api_endpoint(f"{base_url}/auto-programming/start", "POST", {"sku": "PLA001"})
@@ -236,7 +236,7 @@ def demo_system_status():
     """Demo system status monitoring"""
     print_header("System Status Monitoring", "📡")
     
-    base_url = "https://filatagger.preview.emergentagent.com/api"
+    base_url = "https://mifare-writer.preview.emergentagent.com/api"
     
     print_step("Device Status Summary", "📟")
     
@@ -316,7 +316,7 @@ def main():
         print("   🎨 Interface: Enhanced tabs with detailed device information")
         
         print("\n🔗 Access Points:")
-        print("   🌐 Web Interface: https://filatagger.preview.emergentagent.com")
+        print("   🌐 Web Interface: https://mifare-writer.preview.emergentagent.com")
         print("   💻 CLI Auto-Program: python3 cli.py auto-program --sku PLA001 --mock")
         print("   📖 Full Demo: python3 demo.py")
         

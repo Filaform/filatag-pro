@@ -99,7 +99,7 @@ def demo_system_capabilities():
     """Demo system capabilities"""
     print_header("System Capabilities Overview", "⚙️")
     
-    base_url = "https://filatagger.preview.emergentagent.com/api"
+    base_url = "https://mifare-writer.preview.emergentagent.com/api"
     
     print_step("Hardware Integration Status")
     
@@ -131,7 +131,7 @@ def demo_enhanced_logging():
     """Demo enhanced logging system"""
     print_header("Enhanced Logging System Demo", "📊")
     
-    base_url = "https://filatagger.preview.emergentagent.com/api"
+    base_url = "https://mifare-writer.preview.emergentagent.com/api"
     
     print_step("Current Log Status")
     success, logs_data = test_api(f"{base_url}/logs?limit=5")
@@ -165,7 +165,7 @@ def demo_settings_management():
     """Demo comprehensive settings management"""
     print_header("Settings Management Demo", "🔧")
     
-    base_url = "https://filatagger.preview.emergentagent.com/api"
+    base_url = "https://mifare-writer.preview.emergentagent.com/api"
     
     print_step("Device Configuration Options")
     device_settings = [
@@ -388,7 +388,7 @@ def main():
             print(point)
         
         print("\n🌟 Access Points:")
-        print("   🌐 Web Interface: https://filatagger.preview.emergentagent.com")
+        print("   🌐 Web Interface: https://mifare-writer.preview.emergentagent.com")
         print("   💻 CLI Auto-Program: python3 cli.py auto-program --sku [SKU] --mock")
         print("   📖 Documentation: README.md with complete setup guide")
         

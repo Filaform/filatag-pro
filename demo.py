@@ -144,7 +144,7 @@ def demo_api_functionality():
     """Demo Web API functionality"""
     print_header("Web API Functionality Demo")
     
-    base_url = "https://filatagger.preview.emergentagent.com/api"
+    base_url = "https://mifare-writer.preview.emergentagent.com/api"
     
     # Test 1: Get filaments
     print_step("Testing filaments API endpoint")
@@ -375,7 +375,7 @@ def main():
         
         print("\n" + "🎉 Demo completed successfully!")
         print("\nNext steps:")
-        print("1. Review the web interface at: https://filatagger.preview.emergentagent.com")
+        print("1. Review the web interface at: https://mifare-writer.preview.emergentagent.com")
         print("2. Test CLI commands: python3 cli.py --help")
         print("3. Check logs: tail -f /var/log/filatag/actions.log")
         if mock_mode:
