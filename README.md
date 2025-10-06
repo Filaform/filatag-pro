@@ -420,3 +420,134 @@ Please report issues on the GitHub issue tracker with:
 - **Storage**: SanDisk Extreme 32GB microSD (Class 10, A2)
 - **Case**: Industrial touchscreen enclosure with DIN rail mounting
 - **Power**: Official Raspberry Pi 4 Power Supply (5.1V, 3A)
+
+## 🔄 Updates & Maintenance
+
+### Updating FilaTag Pro
+
+```bash
+# Navigate to installation directory
+cd /opt/filatag
+
+# Backup current configuration
+sudo cp -r /etc/filatag /etc/filatag.backup.$(date +%Y%m%d)
+
+# Pull latest changes from GitHub
+git pull origin main
+
+# Update Python dependencies
+source venv/bin/activate
+pip install -r backend/requirements.txt
+
+# Update frontend dependencies
+cd frontend && yarn install && cd ..
+
+# Restart services
+sudo supervisorctl restart filatag:*
+
+# Verify update
+python3 cli.py device-status --mock
+```
+
+### Backup & Restore
+
+```bash
+# Create backup
+sudo tar -czf filatag-backup-$(date +%Y%m%d).tar.gz \
+    /etc/filatag/ \
+    /opt/filatag/binaries/ \
+    /var/log/filatag/
+
+# Restore from backup
+sudo tar -xzf filatag-backup-YYYYMMDD.tar.gz -C /
+sudo systemctl restart filatag
+```
+
+## 🚀 Deployment Options
+
+### Production Deployment (Recommended)
+
+```bash
+# Using systemd service
+sudo systemctl enable filatag
+sudo systemctl start filatag
+
+# Auto-start touchscreen interface on boot
+sudo systemctl enable lightdm
+echo "@chromium-browser --kiosk --disable-infobars http://localhost:3000" >> ~/.config/lxsession/LXDE-pi/autostart
+```
+
+### Kiosk Mode Setup (Manufacturing Environment)
+
+```bash
+# Configure automatic login
+sudo raspi-config  # Enable auto-login to desktop
+
+# Hide cursor and disable screen blanking
+echo "xset s off && xset -dpms && xset s noblank" >> ~/.xsessionrc
+
+# Auto-start FilaTag Pro interface
+cat > ~/.config/autostart/filatag.desktop << 'EOF'
+[Desktop Entry]
+Type=Application
+Name=FilaTag Pro
+Exec=chromium-browser --kiosk --disable-infobars --touch-events --disable-pinch http://localhost:3000
+EOF
+```
+
+## 📞 Support & Documentation
+
+### Getting Help
+
+1. **GitHub Issues**: Report bugs and feature requests at [GitHub Repository](https://github.com/your-organization/filatag-pro/issues)
+2. **Documentation**: Complete API documentation available in `/docs/` folder
+3. **Community**: Join discussions in GitHub Discussions
+4. **Commercial Support**: Contact Filaform for enterprise support options
+
+### Troubleshooting Resources
+
+- **Logs**: Check `/var/log/filatag/actions.log` for detailed operation logs
+- **Mock Mode**: Use `--mock` flag for testing without hardware
+- **Demo Script**: Run `python3 filaform_demo.py` for comprehensive system test
+- **Health Check**: Visit `http://localhost:8001/api/device/status` for API status
+
+## 📜 License & Legal
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) file for details.
+
+### Third-Party Licenses
+- **Proxmark3**: GPL v2 - RRG/Iceman firmware required
+- **React**: MIT License
+- **FastAPI**: MIT License  
+- **MongoDB**: Server Side Public License (SSPL)
+- **OpenCV**: Apache License 2.0
+
+## 📊 Version History
+
+- **v2.0.0** (Current): FilaTag Pro with touchscreen interface
+  - 7-inch touchscreen optimization (1024x600)
+  - Automated barcode scanning with UPC/EAN support
+  - Auto-detection and programming workflow
+  - Professional Filaform branding
+  - Enhanced logging with clear functionality
+  - Comprehensive settings management
+  - Production-ready kiosk interface
+
+- **v1.5.0**: Enhanced automation features
+  - Auto RFID detection and programming
+  - Camera integration for barcode scanning
+  - Real-time status updates and progress tracking
+  - Enhanced CLI with auto-program command
+
+- **v1.0.0**: Initial release
+  - Basic web UI and CLI interface
+  - MIFARE Classic 1K support
+  - Dual tag programming per spool
+  - Mock mode for testing
+  - Structured JSON logging
+
+---
+
+**FilaTag Pro** - Professional RFID Programming System by [Filaform](https://filaform.com)
+
+For commercial licensing, enterprise support, or custom development inquiries, please contact: support@filaform.com
