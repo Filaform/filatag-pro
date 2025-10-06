@@ -1,25 +1,57 @@
-# Filatag RFID Programmer
+# FilaTag Pro - Professional RFID Programming System
 
-A complete RFID programming solution for filament spools using Proxmark3 hardware. This application programs two 13.56 MHz MIFARE Classic S50 (1K) RFID tags per spool with binary data specific to each filament SKU.
+A complete, production-ready RFID programming solution for filament spools using Proxmark3 hardware. FilaTag Pro programs two 13.56 MHz MIFARE Classic S50 (1K) RFID tags per spool with automated barcode scanning and detection capabilities.
 
-## Features
+## 🚀 Features
 
-- **Web Interface**: Responsive web UI accessible from any device on the LAN
-- **Real-time Programming**: Live progress tracking with Proxmark3 output streaming  
-- **Dual Tag Programming**: Program two RFID tags per spool with verification
-- **CLI Tool**: Headless command-line interface for automated workflows
-- **Mock Mode**: Complete testing and development without hardware
-- **Structured Logging**: JSON logs with full audit trail
-- **Device Auto-detection**: Automatic Proxmark3 USB device detection
-- **Flexible Configuration**: Configurable retry logic, verification modes, and keys
+- **🖥️ Touchscreen Interface**: Optimized for 7-inch displays (1024x600) with touch-friendly controls
+- **📷 Barcode Scanning**: Automatic filament detection via USB webcam with UPC/EAN support
+- **🤖 Auto-Detection**: Automatic RFID tag detection and programming when placed on antenna
+- **⚡ Real-time Updates**: Live progress tracking with WebSocket communication
+- **🎯 Dual Tag Programming**: Program and verify two RFID tags per spool automatically
+- **💻 CLI Tool**: Complete command-line interface for headless operations
+- **🧪 Mock Mode**: Full simulation for testing and development without hardware
+- **📊 Structured Logging**: JSON audit logs with clear functionality and export
+- **⚙️ Comprehensive Settings**: Device paths, verification modes, camera configuration
+- **🔒 Security**: MIFARE key management and secure configuration storage
 
-## Hardware Requirements
+## 🏭 Hardware Requirements
 
-- **Linux SBC**: Raspberry Pi 4 or similar (2GB+ RAM recommended)
-- **Proxmark3**: Iceman fork v4.18994+ (original version NOT supported)
-- **RFID Tags**: MIFARE Classic S50 (1K) tags
+### Essential Components
+- **Linux SBC**: Raspberry Pi 4B (4GB RAM recommended) or compatible ARM64/x86_64 system
+- **Touchscreen**: 7-inch display with 1024x600 resolution (capacitive touch recommended)
+- **Proxmark3**: Iceman fork v4.18994+ ⚠️ Original Proxmark3 firmware NOT supported
+- **USB Camera**: For barcode scanning (UPC/EAN compatible)
+- **RFID Tags**: MIFARE Classic S50 (1K) tags for filament spools
 
-## Installation
+### Recommended Setup
+- **Mounting**: Industrial touchscreen enclosure for manufacturing environment
+- **Connectivity**: Ethernet connection for reliable network access
+- **Power**: 5V 3A+ power supply for stable operation
+- **Storage**: 32GB+ microSD card (Class 10 or better)
+
+## 📥 Installation
+
+### Prerequisites
+
+Before installing FilaTag Pro, ensure you have:
+- Fresh Raspberry Pi OS (64-bit) or Ubuntu 20.04+ installation
+- Internet connectivity for downloading dependencies
+- sudo/root access for system configuration
+- Basic familiarity with Linux command line
+
+### Step 1: Clone from GitHub
+
+```bash
+# Clone the FilaTag Pro repository
+git clone https://github.com/your-organization/filatag-pro.git
+cd filatag-pro
+
+# Or download and extract if you don't have git
+wget https://github.com/your-organization/filatag-pro/archive/main.zip
+unzip main.zip
+cd filatag-pro-main
+```
 
 ### 1. Install System Dependencies
 
