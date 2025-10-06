@@ -60,11 +60,11 @@ Before installing FilaTag Pro, ensure you have:
 
 ```bash
 # Clone the FilaTag Pro repository
-git clone https://github.com/your-organization/filatag-pro.git
+git clone https://github.com/Filaform/filatag-pro.git
 cd filatag-pro
 
 # Or download and extract if you don't have git
-wget https://github.com/your-organization/filatag-pro/archive/main.zip
+wget https://github.com/Filaform/filatag-pro/archive/main.zip
 unzip main.zip
 cd filatag-pro-main
 ```
