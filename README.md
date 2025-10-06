@@ -291,16 +291,40 @@ tail -f /var/log/filatag/actions.log
 
 ## 💻 Usage
 
-### Touchscreen Interface (Primary Method)
+### Desktop Application (Embedded Systems)
 
-**Optimized for 7-inch displays (1024x600 resolution)**
+**Perfect for systems without desktop environment (like Sonic Pad)**
 
-1. **Access**: Touch interface should auto-start on boot
+```bash
+# Launch FilaTag Pro desktop app
+python3 /opt/filatag/desktop_app.py
+
+# Launch in fullscreen mode (recommended for embedded systems)
+python3 /opt/filatag/desktop_app.py --fullscreen
+
+# Launch in windowed mode for development
+python3 /opt/filatag/desktop_app.py --windowed
+
+# Custom ports
+python3 /opt/filatag/desktop_app.py --port 3001 --backend-port 8002
+```
+
+**Features:**
+- **Native GUI**: Works without X11/Wayland desktop environment
+- **Auto-startup**: Automatically starts backend and frontend services
+- **Touch-friendly**: Optimized for touchscreen interfaces
+- **Embedded-ready**: Perfect for industrial controllers and embedded devices
+
+### Web Interface (Browser Access)
+
+**For systems with desktop environment or remote access**
+
+1. **Access**: Open browser to `http://localhost:3000`
 2. **Barcode Scan**: Camera automatically detects UPC/EAN barcodes
-3. **Select Filament**: Touch dropdown or use auto-detected type
-4. **Start Programming**: Large green button starts automated workflow
+3. **Select Filament**: Use dropdown or auto-detected type
+4. **Start Programming**: Click green button to start automated workflow
 5. **Follow Prompts**: Place Tag #1, then Tag #2 when prompted
-6. **View Status**: Check system status and logs via touch navigation
+6. **View Status**: Check system status and logs via web navigation
 
 ### CLI Tool
 
