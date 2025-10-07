@@ -940,7 +940,16 @@ async def check_git_status():
 async def install_git_updates():
     """Install git updates"""
     try:
+        # Load configuration to get git repository URL
+        config = load_config()
+        git_repo_url = config.get('git_repo_url', 'https://github.com/Filaform/filatag-pro.git')
+        
         project_dir = Path(__file__).parent.parent
+        
+        # Ensure remote is set to correct URL
+        remote_result = subprocess.run([
+            'git', 'remote', 'set-url', 'origin', git_repo_url
+        ], cwd=project_dir, capture_output=True, text=True, timeout=30)
         
         # Stash any local changes
         stash_result = subprocess.run([
