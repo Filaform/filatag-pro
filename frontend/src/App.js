@@ -557,8 +557,8 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden">
-      <div className="container mx-auto px-3 py-3 max-w-none h-screen max-h-[600px]">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="container mx-auto px-3 py-3 max-w-none min-h-screen flex flex-col">
         {/* Compact Touchscreen Header */}
         <div className="mb-4">
           <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-4 shadow-lg border border-slate-700">
