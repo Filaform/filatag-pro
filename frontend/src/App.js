@@ -917,7 +917,7 @@ const Dashboard = () => {
           </TabsContent>
 
           {/* Logs Tab */}
-          <TabsContent value="logs">
+          <TabsContent value="logs" className="h-full">
             <Card>
               <CardHeader>
                 <div className="flex justify-between items-center">
