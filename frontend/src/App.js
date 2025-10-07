@@ -279,6 +279,27 @@ const Dashboard = () => {
     }
   };
 
+  const setupGitRepository = async () => {
+    setGitUpdateLoading(true);
+    try {
+      const response = await axios.post(`${API}/system/git-setup`);
+      if (response.data.status === 'success') {
+        toast.success(response.data.message);
+        // Refresh git status after setup
+        await checkGitUpdates();
+      } else if (response.data.status === 'warning') {
+        toast.warning(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error setting up git repository:', error);
+      toast.error('Failed to setup git repository');
+    } finally {
+      setGitUpdateLoading(false);
+    }
+  };
+
   const startProgramming = async () => {
     if (!selectedFilament) {
       toast.error('Please select a filament type');
