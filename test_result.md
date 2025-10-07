@@ -116,6 +116,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "NEW GIT UPDATE FUNCTIONALITY TESTING COMPLETED: Both new git endpoints working perfectly. ✅ GET /api/system/git-status (200 OK) - Returns proper error status in non-git environment with message 'Failed to fetch from remote: fatal: origin does not appear to be a git repository', includes all required fields (status, updates_available, message). ✅ POST /api/system/git-update (200 OK) - Returns proper error status with message 'Failed to pull updates: fatal: origin does not appear to be a git repository', includes all required fields (status, message, restart_required). Both endpoints handle no-git scenario gracefully as expected. Error handling is appropriate for this environment."
+      - working: true
+        agent: "testing"
+        comment: "CONFIGURABLE GIT REPOSITORY URL TESTING COMPLETED: Successfully tested updated git functionality with configurable repository URL (6/6 tests passed, 100% success rate). ✅ Configuration endpoint properly handles git_repo_url field with default value 'https://github.com/Filaform/filatag-pro.git'. ✅ POST /api/config successfully updates git_repo_url and persists changes. ✅ GET /api/system/git-status uses configured repository URL from settings (verified via load_config() function). ✅ POST /api/system/git-update uses configured repository URL from settings. ✅ Settings persistence verified - git_repo_url updates are saved and maintained across requests. ✅ All existing functionality preserved - comprehensive stability testing of 20 backend APIs shows 100% success rate with no regressions. Key implementation verified: git endpoints read repository URL from config.get('git_repo_url') instead of hardcoded values, load_config() function properly loads settings, and dynamic git repository initialization works correctly."
 
   - task: "Python 3.9.2 Compatibility - Requirements.txt"
     implemented: true
