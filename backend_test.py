@@ -258,6 +258,160 @@ class FilatagAPITester:
         
         return success1 and success2
 
+    def test_git_status_api(self):
+        """Test git status API endpoint"""
+        success, data = self.run_test(
+            "Get Git Status",
+            "GET",
+            "system/git-status",
+            200
+        )
+        
+        if success and isinstance(data, dict):
+            print(f"   Status: {data.get('status', 'Unknown')}")
+            print(f"   Updates Available: {data.get('updates_available', 'Unknown')}")
+            print(f"   Message: {data.get('message', 'Unknown')}")
+            
+            # In this environment without git repo, we expect error status
+            if data.get('status') == 'error':
+                print("   ✅ Expected error status in non-git environment")
+            
+            # Verify required fields
+            required_fields = ['status', 'updates_available', 'message']
+            missing_fields = [field for field in required_fields if field not in data]
+            if missing_fields:
+                print(f"⚠️  Missing fields in git status: {missing_fields}")
+            else:
+                print("   All required fields present")
+        
+        return success
+
+    def test_git_update_api(self):
+        """Test git update API endpoint"""
+        success, data = self.run_test(
+            "Install Git Updates",
+            "POST",
+            "system/git-update",
+            200
+        )
+        
+        if success and isinstance(data, dict):
+            print(f"   Status: {data.get('status', 'Unknown')}")
+            print(f"   Message: {data.get('message', 'Unknown')}")
+            print(f"   Restart Required: {data.get('restart_required', 'Unknown')}")
+            
+            # In this environment without git repo, we expect error status
+            if data.get('status') == 'error':
+                print("   ✅ Expected error status in non-git environment")
+            
+            # Verify required fields
+            required_fields = ['status', 'message', 'restart_required']
+            missing_fields = [field for field in required_fields if field not in data]
+            if missing_fields:
+                print(f"⚠️  Missing fields in git update response: {missing_fields}")
+            else:
+                print("   All required fields present")
+        
+        return success
+
+    def test_camera_status_api(self):
+        """Test camera status API endpoint"""
+        success, data = self.run_test(
+            "Get Camera Status",
+            "GET",
+            "camera/status",
+            200
+        )
+        
+        if success and isinstance(data, dict):
+            print(f"   Available: {data.get('available', 'Unknown')}")
+            print(f"   Initialized: {data.get('initialized', 'Unknown')}")
+            print(f"   Scanning: {data.get('scanning', 'Unknown')}")
+            
+            # Verify required fields
+            required_fields = ['available', 'initialized', 'scanning']
+            missing_fields = [field for field in required_fields if field not in data]
+            if missing_fields:
+                print(f"⚠️  Missing fields in camera status: {missing_fields}")
+            else:
+                print("   All required fields present")
+        
+        return success
+
+    def test_barcode_scan_api(self):
+        """Test barcode scanning API endpoint"""
+        success, data = self.run_test(
+            "Scan Barcode",
+            "GET",
+            "barcode/scan",
+            200,
+            timeout=5  # Shorter timeout for barcode scan
+        )
+        
+        if success and isinstance(data, dict):
+            print(f"   Barcode: {data.get('barcode', 'None detected')}")
+            print(f"   SKU: {data.get('sku', 'None mapped')}")
+            
+            # This endpoint should return barcode: null if no barcode detected
+            if data.get('barcode') is None:
+                print("   ✅ No barcode detected (expected in test environment)")
+        
+        return success
+
+    def test_auto_programming_status_api(self):
+        """Test auto-programming status API endpoint"""
+        success, data = self.run_test(
+            "Get Auto-Programming Status",
+            "GET",
+            "auto-programming/status",
+            200
+        )
+        
+        if success and isinstance(data, dict):
+            print(f"   Status data received: {len(str(data))} characters")
+            # Auto-programming status structure may vary
+        
+        return success
+
+    def test_logs_clear_api(self):
+        """Test logs clearing API endpoint"""
+        success, data = self.run_test(
+            "Clear Logs",
+            "POST",
+            "logs/clear",
+            200
+        )
+        
+        if success and isinstance(data, dict):
+            print(f"   Message: {data.get('message', 'Unknown')}")
+            if 'backup' in data:
+                print(f"   Backup created: {data.get('backup', 'Unknown')}")
+        
+        return success
+
+    def test_config_update_api(self):
+        """Test configuration update API endpoint"""
+        # Test updating configuration
+        config_update = {
+            "test_setting": "test_value",
+            "mock_mode": True
+        }
+        
+        success, data = self.run_test(
+            "Update Configuration",
+            "POST",
+            "config",
+            200,
+            config_update
+        )
+        
+        if success and isinstance(data, dict):
+            print(f"   Updated config received: {len(data)} settings")
+            if 'test_setting' in data:
+                print(f"   Test setting: {data.get('test_setting', 'Unknown')}")
+        
+        return success
+
     def test_error_handling(self):
         """Test API error handling"""
         print(f"\n🔍 Testing Error Handling...")
