@@ -848,29 +848,20 @@ async def check_git_status():
         # Check if we have a git repository, if not try to initialize
         git_dir = project_dir / '.git'
         if not git_dir.exists():
-            # Initialize git repository
-            init_result = subprocess.run([
-                'git', 'init'
-            ], cwd=project_dir, capture_output=True, text=True, timeout=30)
-            
-            if init_result.returncode != 0:
-                return {
-                    "status": "error",
-                    "message": f"Failed to initialize git repository: {init_result.stderr}",
-                    "updates_available": False
-                }
-            
-            # Add remote origin
-            remote_result = subprocess.run([
-                'git', 'remote', 'add', 'origin', git_repo_url
-            ], cwd=project_dir, capture_output=True, text=True, timeout=30)
-            
-            if remote_result.returncode != 0:
-                return {
-                    "status": "error",
-                    "message": f"Failed to add git remote: {remote_result.stderr}",
-                    "updates_available": False
-                }
+            # For non-git environments, we can still provide info but can't check updates
+            return {
+                "status": "info",
+                "message": f"Not a git repository. To enable updates, clone from: {git_repo_url}",
+                "updates_available": False,
+                "current_commit": "Not available (no git repository)",
+                "latest_commit": "",
+                "git_repo_url": git_repo_url,
+                "setup_instructions": [
+                    f"git clone {git_repo_url} /opt/filatag",
+                    "cd /opt/filatag",
+                    "git remote set-url origin " + git_repo_url
+                ]
+            }
         else:
             # Check if remote exists, if not add it
             remote_check = subprocess.run([
