@@ -829,6 +829,166 @@ async def get_auto_programming_status():
     detector = get_auto_detector()
     return detector.get_status()
 
+@api_router.get("/system/git-status")
+async def check_git_status():
+    """Check if git updates are available"""
+    try:
+        # Get current project directory (assuming we're in /opt/filatag or similar)
+        project_dir = Path(__file__).parent.parent
+        
+        # Fetch latest changes from remote
+        result = subprocess.run([
+            'git', 'fetch', 'origin'
+        ], cwd=project_dir, capture_output=True, text=True, timeout=30)
+        
+        if result.returncode != 0:
+            return {
+                "status": "error", 
+                "message": f"Failed to fetch from remote: {result.stderr}",
+                "updates_available": False
+            }
+        
+        # Check if local is behind remote
+        result = subprocess.run([
+            'git', 'rev-list', '--count', 'HEAD..origin/main'
+        ], cwd=project_dir, capture_output=True, text=True, timeout=10)
+        
+        if result.returncode != 0:
+            # Try master branch if main doesn't exist
+            result = subprocess.run([
+                'git', 'rev-list', '--count', 'HEAD..origin/master'
+            ], cwd=project_dir, capture_output=True, text=True, timeout=10)
+        
+        if result.returncode == 0:
+            commits_behind = int(result.stdout.strip()) if result.stdout.strip() else 0
+            updates_available = commits_behind > 0
+            
+            # Get current commit info
+            current_commit_result = subprocess.run([
+                'git', 'log', '--oneline', '-1'
+            ], cwd=project_dir, capture_output=True, text=True, timeout=10)
+            
+            current_commit = current_commit_result.stdout.strip() if current_commit_result.returncode == 0 else "Unknown"
+            
+            # Get latest remote commit info if updates available
+            latest_commit = ""
+            if updates_available:
+                latest_commit_result = subprocess.run([
+                    'git', 'log', '--oneline', '-1', 'origin/main'
+                ], cwd=project_dir, capture_output=True, text=True, timeout=10)
+                
+                if latest_commit_result.returncode != 0:
+                    # Try master branch
+                    latest_commit_result = subprocess.run([
+                        'git', 'log', '--oneline', '-1', 'origin/master'
+                    ], cwd=project_dir, capture_output=True, text=True, timeout=10)
+                
+                latest_commit = latest_commit_result.stdout.strip() if latest_commit_result.returncode == 0 else "Unknown"
+            
+            return {
+                "status": "success",
+                "updates_available": updates_available,
+                "commits_behind": commits_behind,
+                "current_commit": current_commit,
+                "latest_commit": latest_commit,
+                "message": f"{commits_behind} update(s) available" if updates_available else "Up to date"
+            }
+        else:
+            return {
+                "status": "error",
+                "message": "Failed to check git status",
+                "updates_available": False
+            }
+            
+    except subprocess.TimeoutExpired:
+        return {
+            "status": "error", 
+            "message": "Git operation timed out",
+            "updates_available": False
+        }
+    except Exception as e:
+        return {
+            "status": "error", 
+            "message": str(e),
+            "updates_available": False
+        }
+
+@api_router.post("/system/git-update")
+async def install_git_updates():
+    """Install git updates"""
+    try:
+        project_dir = Path(__file__).parent.parent
+        
+        # Stash any local changes
+        stash_result = subprocess.run([
+            'git', 'stash', 'push', '-m', f'Auto-stash before update {datetime.now().isoformat()}'
+        ], cwd=project_dir, capture_output=True, text=True, timeout=30)
+        
+        # Pull latest changes
+        pull_result = subprocess.run([
+            'git', 'pull', 'origin', 'main'
+        ], cwd=project_dir, capture_output=True, text=True, timeout=60)
+        
+        if pull_result.returncode != 0:
+            # Try master branch if main fails
+            pull_result = subprocess.run([
+                'git', 'pull', 'origin', 'master'
+            ], cwd=project_dir, capture_output=True, text=True, timeout=60)
+        
+        if pull_result.returncode == 0:
+            # Update Python dependencies if requirements.txt changed
+            requirements_file = project_dir / "backend" / "requirements.txt"
+            if requirements_file.exists():
+                pip_result = subprocess.run([
+                    'pip', 'install', '-r', str(requirements_file)
+                ], capture_output=True, text=True, timeout=300)
+                
+                if pip_result.returncode != 0:
+                    logger.warning(f"Failed to update Python dependencies: {pip_result.stderr}")
+            
+            # Update Node.js dependencies if package.json changed
+            package_json = project_dir / "frontend" / "package.json"
+            if package_json.exists():
+                yarn_result = subprocess.run([
+                    'yarn', 'install'
+                ], cwd=project_dir / "frontend", capture_output=True, text=True, timeout=300)
+                
+                if yarn_result.returncode != 0:
+                    logger.warning(f"Failed to update Node.js dependencies: {yarn_result.stderr}")
+            
+            # Get new commit info
+            new_commit_result = subprocess.run([
+                'git', 'log', '--oneline', '-1'
+            ], cwd=project_dir, capture_output=True, text=True, timeout=10)
+            
+            new_commit = new_commit_result.stdout.strip() if new_commit_result.returncode == 0 else "Unknown"
+            
+            return {
+                "status": "success",
+                "message": "Updates installed successfully. Please restart the application.",
+                "new_commit": new_commit,
+                "restart_required": True
+            }
+        else:
+            return {
+                "status": "error",
+                "message": f"Failed to pull updates: {pull_result.stderr}",
+                "restart_required": False
+            }
+            
+    except subprocess.TimeoutExpired:
+        return {
+            "status": "error", 
+            "message": "Update operation timed out",
+            "restart_required": False
+        }
+    except Exception as e:
+        return {
+            "status": "error", 
+            "message": str(e),
+            "restart_required": False
+        }
+
 # Include router
 app.include_router(api_router)
 
