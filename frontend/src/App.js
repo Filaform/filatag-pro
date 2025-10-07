@@ -78,6 +78,8 @@ const Dashboard = () => {
     loadLogs();
     checkCameraStatus();
     loadSettings();
+    // Check for updates on startup (silently)
+    checkGitUpdates();
   }, []);
 
   // Auto-detection polling
