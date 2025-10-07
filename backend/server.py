@@ -50,7 +50,8 @@ config = {
     "verification_timeout": 30,
     "strict_verification": True,
     "mock_mode": True,  # Enable mock mode for demonstration
-    "default_keys": ["FFFFFFFFFFFF", "000000000000"]
+    "default_keys": ["FFFFFFFFFFFF", "000000000000"],
+    "git_repo_url": "https://github.com/Filaform/filatag-pro.git"
 }
 
 # Load config if exists
