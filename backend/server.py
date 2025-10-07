@@ -59,6 +59,10 @@ if CONFIG_FILE.exists():
     with open(CONFIG_FILE) as f:
         config.update(json.load(f))
 
+def load_config():
+    """Load current configuration"""
+    return config.copy()
+
 # Enums
 class TagStatus(str, Enum):
     PENDING = "pending"
