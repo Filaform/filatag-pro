@@ -679,7 +679,7 @@ const Dashboard = () => {
             )}
             
             <div className="text-xs text-gray-500 space-y-1">
-              <p>• Updates are pulled from: https://github.com/Filaform/filatag-pro</p>
+              <p>• Updates are pulled from: <span className="text-blue-600">{localSettings.git_repo_url}</span></p>
               <p>• Python and Node.js dependencies are automatically updated</p>
               <p>• Local changes are automatically stashed before update</p>
             </div>
