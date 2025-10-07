@@ -784,7 +784,7 @@ const Dashboard = () => {
           </TabsContent>
 
           {/* Device Tab */}
-          <TabsContent value="device">
+          <TabsContent value="device" className="h-full">
             <div className="space-y-6">
               {/* Proxmark3 Device */}
               <Card>
