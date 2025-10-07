@@ -591,6 +591,21 @@ const Dashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* Git Repository URL Setting */}
+            <div className="space-y-2">
+              <Label htmlFor="git-repo-url">Git Repository URL</Label>
+              <Input
+                id="git-repo-url"
+                value={localSettings.git_repo_url}
+                onChange={(e) => handleSettingChange('git_repo_url', e.target.value)}
+                placeholder="https://github.com/owner/repository.git"
+                className="min-h-[44px]"
+              />
+              <p className="text-xs text-gray-500">
+                Git repository URL for checking and installing updates
+              </p>
+            </div>
+            
             <div className="flex items-center justify-between p-4 border rounded-lg bg-gray-50">
               <div className="space-y-1">
                 <p className="font-medium">FilaTag Pro Updates</p>
