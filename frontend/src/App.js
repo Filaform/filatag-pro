@@ -626,8 +626,10 @@ const Dashboard = () => {
             </TabsTrigger>
           </TabsList>
 
-          {/* Programming Tab */}
-          <TabsContent value="programming">
+          {/* Scrollable content area */}
+          <div className="flex-1 overflow-y-auto overflow-x-hidden">
+            {/* Programming Tab */}
+            <TabsContent value="programming" className="h-full">
             <div className="grid grid-cols-1 gap-4">
               {/* Compact Automated Workflow */}
               <Card data-testid="auto-workflow-card" className="shadow-lg">
