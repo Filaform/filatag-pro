@@ -230,6 +230,52 @@ const Dashboard = () => {
     }
   };
 
+  const checkGitUpdates = async () => {
+    setCheckingUpdates(true);
+    try {
+      const response = await axios.get(`${API}/system/git-status`);
+      setGitStatus(response.data);
+      if (response.data.status === 'success') {
+        if (response.data.updates_available) {
+          toast.info(`${response.data.commits_behind} update(s) available`);
+        } else {
+          toast.success('System is up to date');
+        }
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error checking git updates:', error);
+      toast.error('Failed to check for updates');
+      setGitStatus({ status: 'error', message: 'Failed to connect', updates_available: false });
+    } finally {
+      setCheckingUpdates(false);
+    }
+  };
+
+  const installGitUpdates = async () => {
+    if (!gitStatus || !gitStatus.updates_available) return;
+    
+    setGitUpdateLoading(true);
+    try {
+      const response = await axios.post(`${API}/system/git-update`);
+      if (response.data.status === 'success') {
+        toast.success(response.data.message);
+        setGitStatus(null); // Reset git status after update
+        if (response.data.restart_required) {
+          toast.info('Please restart the application to apply updates', { duration: 10000 });
+        }
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error installing updates:', error);
+      toast.error('Failed to install updates');
+    } finally {
+      setGitUpdateLoading(false);
+    }
+  };
+
   const startProgramming = async () => {
     if (!selectedFilament) {
       toast.error('Please select a filament type');
