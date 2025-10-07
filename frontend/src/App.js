@@ -994,9 +994,10 @@ const Dashboard = () => {
           </TabsContent>
 
           {/* Settings Tab */}
-          <TabsContent value="config">
+          <TabsContent value="config" className="h-full">
             <SettingsPanel />
           </TabsContent>
+          </div>
         </Tabs>
       </div>
 
