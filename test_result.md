@@ -168,7 +168,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Python 3.9.2 Compatibility - Requirements.txt"
+    - "Git Update Functionality - System Endpoints"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
