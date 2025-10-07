@@ -472,6 +472,36 @@ class FilatagAPITester:
             ("Error Handling", self.test_error_handling),
         ]
         
+        # New Git Update API Tests (Priority Focus)
+        git_tests = [
+            ("Git Status API", self.test_git_status_api),
+            ("Git Update API", self.test_git_update_api),
+        ]
+        
+        # Extended API Tests
+        extended_tests = [
+            ("Camera Status API", self.test_camera_status_api),
+            ("Barcode Scan API", self.test_barcode_scan_api),
+            ("Auto-Programming Status API", self.test_auto_programming_status_api),
+            ("Logs Clear API", self.test_logs_clear_api),
+            ("Config Update API", self.test_config_update_api),
+        ]
+        
+        # Run tests in priority order
+        print("\n" + "=" * 40)
+        print("  PRIORITY: NEW GIT UPDATE FUNCTIONALITY")
+        print("=" * 40)
+        
+        for test_name, test_func in git_tests:
+            try:
+                test_func()
+            except Exception as e:
+                print(f"❌ {test_name} failed with exception: {e}")
+        
+        print("\n" + "=" * 40)
+        print("  CORE API STABILITY TESTS")
+        print("=" * 40)
+        
         for test_name, test_func in tests:
             try:
                 test_func()
