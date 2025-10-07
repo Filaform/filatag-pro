@@ -668,7 +668,7 @@ const Dashboard = () => {
                   </div>
                 )}
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 <Button
                   variant="outline"
                   onClick={checkGitUpdates}
@@ -684,6 +684,24 @@ const Dashboard = () => {
                     '🔍 Check Updates'
                   )}
                 </Button>
+                
+                {gitStatus && gitStatus.status === 'info' && gitStatus.setup_instructions && (
+                  <Button
+                    onClick={setupGitRepository}
+                    disabled={gitUpdateLoading || checkingUpdates}
+                    className="bg-blue-600 hover:bg-blue-700 min-h-[44px]"
+                  >
+                    {gitUpdateLoading ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        Setting up...
+                      </div>
+                    ) : (
+                      '⚙️ Setup Git'
+                    )}
+                  </Button>
+                )}
+                
                 {gitStatus && gitStatus.updates_available && (
                   <Button
                     onClick={installGitUpdates}
