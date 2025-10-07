@@ -848,21 +848,45 @@ async def check_git_status():
         # Check if we have a git repository, if not try to initialize
         git_dir = project_dir / '.git'
         if not git_dir.exists():
-            # Try to initialize git repository and add remote
+            # Initialize git repository
             init_result = subprocess.run([
                 'git', 'init'
             ], cwd=project_dir, capture_output=True, text=True, timeout=30)
             
-            if init_result.returncode == 0:
-                # Add remote origin
+            if init_result.returncode != 0:
+                return {
+                    "status": "error",
+                    "message": f"Failed to initialize git repository: {init_result.stderr}",
+                    "updates_available": False
+                }
+            
+            # Add remote origin
+            remote_result = subprocess.run([
+                'git', 'remote', 'add', 'origin', git_repo_url
+            ], cwd=project_dir, capture_output=True, text=True, timeout=30)
+            
+            if remote_result.returncode != 0:
+                return {
+                    "status": "error",
+                    "message": f"Failed to add git remote: {remote_result.stderr}",
+                    "updates_available": False
+                }
+        else:
+            # Check if remote exists, if not add it
+            remote_check = subprocess.run([
+                'git', 'remote', 'get-url', 'origin'
+            ], cwd=project_dir, capture_output=True, text=True, timeout=10)
+            
+            if remote_check.returncode != 0:
+                # Remote doesn't exist, add it
                 remote_result = subprocess.run([
                     'git', 'remote', 'add', 'origin', git_repo_url
                 ], cwd=project_dir, capture_output=True, text=True, timeout=30)
-        else:
-            # Update remote URL in case it changed in settings
-            remote_result = subprocess.run([
-                'git', 'remote', 'set-url', 'origin', git_repo_url
-            ], cwd=project_dir, capture_output=True, text=True, timeout=30)
+            else:
+                # Update remote URL in case it changed in settings
+                remote_result = subprocess.run([
+                    'git', 'remote', 'set-url', 'origin', git_repo_url
+                ], cwd=project_dir, capture_output=True, text=True, timeout=30)
         
         # Fetch latest changes from remote
         result = subprocess.run([
