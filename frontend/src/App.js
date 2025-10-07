@@ -66,6 +66,11 @@ const Dashboard = () => {
     default_keys: ['FFFFFFFFFFFF', '000000000000']
   });
   const [settingsLoading, setSettingsLoading] = useState(false);
+  
+  // Git update states
+  const [gitStatus, setGitStatus] = useState(null);
+  const [gitUpdateLoading, setGitUpdateLoading] = useState(false);
+  const [checkingUpdates, setCheckingUpdates] = useState(false);
 
   useEffect(() => {
     loadFilaments();
