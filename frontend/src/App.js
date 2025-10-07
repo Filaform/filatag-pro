@@ -638,6 +638,8 @@ const Dashboard = () => {
                       ) : (
                         'System is up to date'
                       )
+                    ) : gitStatus.status === 'info' ? (
+                      gitStatus.message
                     ) : (
                       `Error: ${gitStatus.message}`
                     )
@@ -654,6 +656,16 @@ const Dashboard = () => {
                   <p className="text-xs text-blue-600">
                     Latest: {gitStatus.latest_commit}
                   </p>
+                )}
+                {gitStatus && gitStatus.setup_instructions && (
+                  <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
+                    <p className="font-medium text-yellow-800 mb-1">Manual Setup Instructions:</p>
+                    {gitStatus.setup_instructions.map((instruction, index) => (
+                      <p key={index} className="text-yellow-700 font-mono">
+                        {instruction}
+                      </p>
+                    ))}
+                  </div>
                 )}
               </div>
               <div className="flex gap-2">
