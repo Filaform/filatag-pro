@@ -975,10 +975,30 @@ async def install_git_updates():
         
         project_dir = Path(__file__).parent.parent
         
+        # Check if we have a git repository, if not try to clone instead of pull
+        git_dir = project_dir / '.git'
+        if not git_dir.exists():
+            return {
+                "status": "error",
+                "message": "No git repository found. Use 'Check Updates' first to initialize repository tracking, or clone the repository manually.",
+                "restart_required": False
+            }
+        
         # Ensure remote is set to correct URL
-        remote_result = subprocess.run([
-            'git', 'remote', 'set-url', 'origin', git_repo_url
-        ], cwd=project_dir, capture_output=True, text=True, timeout=30)
+        remote_check = subprocess.run([
+            'git', 'remote', 'get-url', 'origin'
+        ], cwd=project_dir, capture_output=True, text=True, timeout=10)
+        
+        if remote_check.returncode != 0:
+            # Remote doesn't exist, add it
+            remote_result = subprocess.run([
+                'git', 'remote', 'add', 'origin', git_repo_url
+            ], cwd=project_dir, capture_output=True, text=True, timeout=30)
+        else:
+            # Update remote URL in case it changed in settings
+            remote_result = subprocess.run([
+                'git', 'remote', 'set-url', 'origin', git_repo_url
+            ], cwd=project_dir, capture_output=True, text=True, timeout=30)
         
         # Stash any local changes
         stash_result = subprocess.run([
