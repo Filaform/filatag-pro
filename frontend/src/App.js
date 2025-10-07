@@ -590,7 +590,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="programming" className="w-full">
+        <Tabs defaultValue="programming" className="w-full flex-1 flex flex-col overflow-hidden">
           <TabsList className="grid w-full grid-cols-4 mb-4 h-12 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-lg shadow-sm">
             <TabsTrigger 
               value="programming" 
