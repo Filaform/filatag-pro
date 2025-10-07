@@ -833,8 +833,31 @@ async def get_auto_programming_status():
 async def check_git_status():
     """Check if git updates are available"""
     try:
+        # Load configuration to get git repository URL
+        config = load_config()
+        git_repo_url = config.get('git_repo_url', 'https://github.com/Filaform/filatag-pro.git')
+        
         # Get current project directory (assuming we're in /opt/filatag or similar)
         project_dir = Path(__file__).parent.parent
+        
+        # Check if we have a git repository, if not try to initialize
+        git_dir = project_dir / '.git'
+        if not git_dir.exists():
+            # Try to initialize git repository and add remote
+            init_result = subprocess.run([
+                'git', 'init'
+            ], cwd=project_dir, capture_output=True, text=True, timeout=30)
+            
+            if init_result.returncode == 0:
+                # Add remote origin
+                remote_result = subprocess.run([
+                    'git', 'remote', 'add', 'origin', git_repo_url
+                ], cwd=project_dir, capture_output=True, text=True, timeout=30)
+        else:
+            # Update remote URL in case it changed in settings
+            remote_result = subprocess.run([
+                'git', 'remote', 'set-url', 'origin', git_repo_url
+            ], cwd=project_dir, capture_output=True, text=True, timeout=30)
         
         # Fetch latest changes from remote
         result = subprocess.run([
