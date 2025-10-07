@@ -508,6 +508,16 @@ class FilatagAPITester:
             except Exception as e:
                 print(f"❌ {test_name} failed with exception: {e}")
         
+        print("\n" + "=" * 40)
+        print("  EXTENDED API TESTS")
+        print("=" * 40)
+        
+        for test_name, test_func in extended_tests:
+            try:
+                test_func()
+            except Exception as e:
+                print(f"❌ {test_name} failed with exception: {e}")
+        
         # Print results
         print("\n" + "=" * 60)
         print("  TEST RESULTS")
