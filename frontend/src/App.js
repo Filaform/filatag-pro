@@ -63,7 +63,8 @@ const Dashboard = () => {
     retry_count: 3,
     detection_interval: 1.0,
     barcode_scan_interval: 2.0,
-    default_keys: ['FFFFFFFFFFFF', '000000000000']
+    default_keys: ['FFFFFFFFFFFF', '000000000000'],
+    git_repo_url: 'https://github.com/Filaform/filatag-pro.git'
   });
   const [settingsLoading, setSettingsLoading] = useState(false);
   
