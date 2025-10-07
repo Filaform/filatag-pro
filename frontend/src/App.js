@@ -579,6 +579,95 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
+        {/* System Updates */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <span className="text-xl">🔄</span>
+              System Updates
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between p-4 border rounded-lg bg-gray-50">
+              <div className="space-y-1">
+                <p className="font-medium">FilaTag Pro Updates</p>
+                <p className="text-sm text-gray-600">
+                  {gitStatus ? (
+                    gitStatus.status === 'success' ? (
+                      gitStatus.updates_available ? (
+                        `${gitStatus.commits_behind} update(s) available`
+                      ) : (
+                        'System is up to date'
+                      )
+                    ) : (
+                      `Error: ${gitStatus.message}`
+                    )
+                  ) : (
+                    'Check for updates from GitHub repository'
+                  )}
+                </p>
+                {gitStatus && gitStatus.current_commit && (
+                  <p className="text-xs text-gray-500">
+                    Current: {gitStatus.current_commit}
+                  </p>
+                )}
+                {gitStatus && gitStatus.latest_commit && gitStatus.updates_available && (
+                  <p className="text-xs text-blue-600">
+                    Latest: {gitStatus.latest_commit}
+                  </p>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={checkGitUpdates}
+                  disabled={checkingUpdates || gitUpdateLoading}
+                  className="min-h-[44px]"
+                >
+                  {checkingUpdates ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                      Checking...
+                    </div>
+                  ) : (
+                    '🔍 Check Updates'
+                  )}
+                </Button>
+                {gitStatus && gitStatus.updates_available && (
+                  <Button
+                    onClick={installGitUpdates}
+                    disabled={gitUpdateLoading || checkingUpdates}
+                    className="bg-green-600 hover:bg-green-700 min-h-[44px]"
+                  >
+                    {gitUpdateLoading ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        Installing...
+                      </div>
+                    ) : (
+                      '⬇️ Install Updates'
+                    )}
+                  </Button>
+                )}
+              </div>
+            </div>
+            
+            {gitStatus && gitStatus.status === 'success' && gitStatus.updates_available && (
+              <Alert className="border-blue-200 bg-blue-50">
+                <AlertDescription className="text-blue-800">
+                  <strong>Updates Available!</strong> Installing updates will download the latest changes from the GitHub repository and update dependencies. The application may need to be restarted after installation.
+                </AlertDescription>
+              </Alert>
+            )}
+            
+            <div className="text-xs text-gray-500 space-y-1">
+              <p>• Updates are pulled from: https://github.com/Filaform/filatag-pro</p>
+              <p>• Python and Node.js dependencies are automatically updated</p>
+              <p>• Local changes are automatically stashed before update</p>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Save/Reset Buttons */}
         <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
           <div className="flex items-center gap-2">
