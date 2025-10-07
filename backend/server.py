@@ -956,6 +956,75 @@ async def check_git_status():
             "updates_available": False
         }
 
+@api_router.post("/system/git-setup")
+async def setup_git_repository():
+    """Initialize git repository for updates (for non-git installations)"""
+    try:
+        # Load configuration to get git repository URL
+        config = load_config()
+        git_repo_url = config.get('git_repo_url', 'https://github.com/Filaform/filatag-pro.git')
+        
+        project_dir = Path(__file__).parent.parent
+        git_dir = project_dir / '.git'
+        
+        if git_dir.exists():
+            return {
+                "status": "info",
+                "message": "Git repository already initialized",
+                "git_repo_url": git_repo_url
+            }
+        
+        # Initialize git repository
+        init_result = subprocess.run([
+            'git', 'init'
+        ], cwd=project_dir, capture_output=True, text=True, timeout=30)
+        
+        if init_result.returncode != 0:
+            return {
+                "status": "error",
+                "message": f"Failed to initialize git repository: {init_result.stderr}"
+            }
+        
+        # Add remote origin
+        remote_result = subprocess.run([
+            'git', 'remote', 'add', 'origin', git_repo_url
+        ], cwd=project_dir, capture_output=True, text=True, timeout=30)
+        
+        if remote_result.returncode != 0:
+            return {
+                "status": "error",
+                "message": f"Failed to add git remote: {remote_result.stderr}"
+            }
+        
+        # Try to fetch to verify connection
+        fetch_result = subprocess.run([
+            'git', 'fetch', 'origin'
+        ], cwd=project_dir, capture_output=True, text=True, timeout=60)
+        
+        if fetch_result.returncode == 0:
+            return {
+                "status": "success",
+                "message": f"Git repository initialized and connected to {git_repo_url}",
+                "git_repo_url": git_repo_url
+            }
+        else:
+            return {
+                "status": "warning",
+                "message": f"Git repository initialized but couldn't connect to remote: {fetch_result.stderr}",
+                "git_repo_url": git_repo_url
+            }
+            
+    except subprocess.TimeoutExpired:
+        return {
+            "status": "error", 
+            "message": "Git setup operation timed out"
+        }
+    except Exception as e:
+        return {
+            "status": "error", 
+            "message": str(e)
+        }
+
 @api_router.post("/system/git-update")
 async def install_git_updates():
     """Install git updates"""
